@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_70">
+
+    <TextView
+        android:id="@+id/channel_name"
+        style="@style/ButtonLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="36dp"
+        android:textAllCaps="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="название канала" />
+
+    <ltd.abtech.androidtv.widget.ActionBar
+        android:id="@+id/action_bar"
+        style="@style/ActionBar"
+        app:layout_constraintStart_toEndOf="@id/channel_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <androidx.leanback.widget.HorizontalGridView
+        android:id="@+id/program_time_list"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="74dp"
+        app:focusOutEnd="false"
+        app:focusOutFront="false"
+        app:focusOutSideEnd="true"
+        app:focusOutSideStart="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/channel_name" />
+
+    <androidx.leanback.widget.HorizontalGridView
+        android:id="@+id/program_list"
+        android:layout_width="0dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="10dp"
+        app:focusOutEnd="false"
+        app:focusOutFront="false"
+        app:focusOutSideEnd="true"
+        app:focusOutSideStart="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/program_time_list" />
+
+    <LinearLayout
+        android:id="@+id/program_info_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="38dp"
+        android:background="@drawable/selectable_surface_background"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:nextFocusLeft="@id/program_info_btn"
+        android:nextFocusRight="@id/program_info_btn"
+        android:nextFocusUp="@id/program_list"
+        android:nextFocusDown="@id/program_info_btn"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:duplicateParentState="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_program_info" />
+
+        <TextView
+            style="@style/ButtonLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:duplicateParentState="true"
+            android:text="@string/program_info"
+            android:textAllCaps="true" />
+    </LinearLayout>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/program_time_list_stub"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        style="@style/Skeleton"
+        app:shimmer_auto_start="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/channel_name">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/item_tv_program_guide_stub"
+                android:layout_width="90dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/selectable_surface_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/item_tv_program_guide_stub_1"
+                android:layout_width="90dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/selectable_surface_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/item_tv_program_guide_stub"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/item_tv_program_guide_stub1"
+                android:layout_width="90dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/selectable_surface_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/item_tv_program_guide_stub"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/item_tv_program_guide_stub_2"
+                android:layout_width="90dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/selectable_surface_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/item_tv_program_guide_stub_1"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/item_tv_program_guide_stub2"
+                android:layout_width="90dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/selectable_surface_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/item_tv_program_guide_stub1"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/item_tv_program_guide_stub_3"
+                android:layout_width="90dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/selectable_surface_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/item_tv_program_guide_stub_2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/item_tv_program_guide_stub3"
+                android:layout_width="90dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/selectable_surface_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/item_tv_program_guide_stub2"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/program_list_stub"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/Skeleton"
+        app:shimmer_auto_start="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/program_time_list">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/item_tv_program_stub"
+                android:layout_width="250dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/poster_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/item_tv_program_stub_1"
+                android:layout_width="250dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="28dp"
+                android:background="@drawable/poster_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/item_tv_program_stub"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/item_tv_program_stub1"
+                android:layout_width="250dp"
+                android:layout_height="200dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/poster_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/item_tv_program_stub"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/item_tv_program_stub_2"
+                android:layout_width="250dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="28dp"
+                android:background="@drawable/poster_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/item_tv_program_stub_1"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/item_tv_program_stub2"
+                android:layout_width="250dp"
+                android:layout_height="200dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/poster_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/item_tv_program_stub1"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <include
+        android:id="@+id/load_error"
+        layout="@layout/view_tv_error"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/main_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="channel_name,action_bar,program_time_list,program_list,program_info_btn" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/skeleton_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="program_time_list_stub,program_list_stub" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="request_permissions_title">Updater</string>
+    <string name="request_permissions_text">To notify the user, the module needs permission to display dialogs on top of other windows.</string>
+    <string name="error_request_permissions_title">Error</string>
+    <string name="error_request_permissions_text">Failed to open permission to display dialogs on top of other windows. You can do it yourself in the application settings.</string>
+    <string name="update_title">Update</string>
+    <string name="update_text">There is an update for Wifire TV. Do you want to install it?</string>
+    <string name="OK" translatable="false">OK</string>
+    <string name="Cancel" translatable="false">Cancel</string>
+</resources>

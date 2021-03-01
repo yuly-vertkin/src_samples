@@ -1,0 +1,270 @@
+{
+  "project_info": {
+    "project_number": "480122224365",
+    "firebase_url": "https://wifre-tv.firebaseio.com",
+    "project_id": "wifre-tv",
+    "storage_bucket": "wifre-tv.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480122224365:android:70db6b14cd188292",
+        "android_client_info": {
+          "package_name": "com.nbn.NBNTV"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM7DG01_nhiaYzaF3ybkItW6qMaUvIY4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "480122224365-cjuen8elade65hfm2ln2aiq9g7901j8o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ru.wifire.NBN",
+                "app_store_id": "936221013"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480122224365:android:9daafb4ad87767a3",
+        "android_client_info": {
+          "package_name": "com.nbn.NBNTV.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM7DG01_nhiaYzaF3ybkItW6qMaUvIY4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "480122224365-cjuen8elade65hfm2ln2aiq9g7901j8o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ru.wifire.NBN",
+                "app_store_id": "936221013"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480122224365:android:2b531d0e3e369ddf",
+        "android_client_info": {
+          "package_name": "ee.stv.go"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM7DG01_nhiaYzaF3ybkItW6qMaUvIY4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "480122224365-cjuen8elade65hfm2ln2aiq9g7901j8o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ru.wifire.NBN",
+                "app_store_id": "936221013"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480122224365:android:990e26a75f0b29d2",
+        "android_client_info": {
+          "package_name": "tj.ttl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM7DG01_nhiaYzaF3ybkItW6qMaUvIY4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "480122224365-cjuen8elade65hfm2ln2aiq9g7901j8o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ru.wifire.NBN",
+                "app_store_id": "936221013"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480122224365:android:ca83eaa1ca9cc50ec116e4",
+        "android_client_info": {
+          "package_name": "tv.mediastage.migration.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM7DG01_nhiaYzaF3ybkItW6qMaUvIY4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "480122224365-cjuen8elade65hfm2ln2aiq9g7901j8o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ru.wifire.NBN",
+                "app_store_id": "936221013"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480122224365:android:ad9882e7ea1a1a8b",
+        "android_client_info": {
+          "package_name": "tv.mediastage.mobiletv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM7DG01_nhiaYzaF3ybkItW6qMaUvIY4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "480122224365-cjuen8elade65hfm2ln2aiq9g7901j8o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ru.wifire.NBN",
+                "app_store_id": "936221013"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480122224365:android:ff99956310523c5bc116e4",
+        "android_client_info": {
+          "package_name": "tv.mediastage.updater.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM7DG01_nhiaYzaF3ybkItW6qMaUvIY4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480122224365-n545bc906m94rqiq1kshq6m1usakg6m3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "480122224365-cjuen8elade65hfm2ln2aiq9g7901j8o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ru.wifire.NBN",
+                "app_store_id": "936221013"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
