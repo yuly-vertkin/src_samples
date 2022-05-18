@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="fv"
+            type="ru.russianpost.payments.base.ui.ButtonFieldValue" />
+    </data>
+
+    <ru.russianpost.mobileapp.widget.ButtonView
+        android:id="@+id/item"
+        style="@style/ButtonView.RussianPost.Toggle.Default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_marginHorizontal="@{fv.horizontalMarginRes}"
+        app:layout_marginVertical="@{fv.verticalMarginRes}"
+        android:text="@{fv.text}"
+        android:textColor="@color/grayscale_asphalt"
+        android:onClick="@{() -> fv.onClick()}" />
+
+</layout>

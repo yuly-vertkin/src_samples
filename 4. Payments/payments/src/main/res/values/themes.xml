@@ -1,0 +1,57 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Payments" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/common_xenon</item>
+        <item name="colorPrimaryVariant">@color/common_sky</item>
+        <item name="colorOnPrimary">@color/constant_cotton</item>
+        <!-- Secondary brand color -->
+        <item name="colorSecondary">@color/common_cabernet</item>
+        <item name="colorSecondaryVariant">@color/common_citron</item>
+        <item name="colorOnSecondary">@color/constant_obsidian</item>
+        <!-- Status bar color -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <!-- Customize your theme here. -->
+        <item name="toolbarStyle">@style/PsToolbarStyle</item>
+        <item name="android:windowBackground">@color/grayscale_blanc</item>
+        <item name="android:actionMenuTextColor">@color/common_xenon</item>
+        <item name="textAllCaps">false</item>
+        <!-- Style to use for Snackbars in this theme. -->
+        <item name="snackbarStyle">@style/PsSnackbarStyle</item>
+        <item name="snackbarTextViewStyle">@style/PsSnackbarTextStyle</item>
+        <item name="bottomSheetDialogTheme">@style/PsBottomSheetDialogTheme</item>
+    </style>
+
+    <style name="PsToolbarStyle" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">@color/grayscale_blanc</item>
+        <item name="titleTextColor">@color/grayscale_carbon</item>
+<!--        <item name="navigationIcon">@drawable/ic_arrow_back_blue_24dp</item>-->
+        <item name="navigationIconTint">@color/grayscale_carbon</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <style name="PsSnackbarStyle" parent="@style/Widget.MaterialComponents.Snackbar">
+        <!-- using backgroundTint the alpha layer is ignored -->
+        <item name="backgroundTint">@color/grayscale_blanc</item>
+    </style>
+
+    <style name="PsSnackbarTextStyle" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textColor">@color/grayscale_carbon</item>
+    </style>
+
+<!--
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/grayscale_divider</item>
+    </style>
+-->
+
+    <style name="PsBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/PsBottomSheetModalStyle</item>
+    </style>
+
+    <style name="PsBottomSheetModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/ps_rounded_dialog</item>
+    </style>
+</resources>

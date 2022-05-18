@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="fv"
+            type="ru.russianpost.payments.base.ui.SpinnerFieldValue" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            style="@style/TextView.RussianPost.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingHorizontal="@dimen/ps_horizontal_margin"
+            android:paddingTop="4dp"
+            android:paddingBottom="2dp"
+            android:text="@{fv.title}"
+            android:textColor="@color/design_input_view_label" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner"
+            style="@style/Widget.AppCompat.Spinner.DropDown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="6dp"
+            app:adapter="@{fv.adapter}"
+            app:listData="@{fv.items}"
+            app:enables="@{fv.enables}"
+            app:selected="@={fv.selected}" />
+    </LinearLayout>
+</layout>

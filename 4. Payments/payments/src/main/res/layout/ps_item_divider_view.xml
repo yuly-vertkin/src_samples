@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="fv"
+            type="ru.russianpost.payments.base.ui.DividerFieldValue" />
+    </data>
+
+    <View
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ps_zero_height"
+        android:background="@color/grayscale_divider"
+        app:layout_height="@{fv.heightRes}"
+        app:layout_marginStart="@{fv.startMarginRes}"
+        app:layout_marginVertical="@{fv.verticalMarginRes}" />
+</layout>

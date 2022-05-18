@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <include app:graph="@navigation/ps_tax_navigation_graph" />
+    <include app:graph="@navigation/ps_auto_fines_navigation_graph" />
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="ru.russianpost.payments.base.ui.MainFragment"
+        android:label="@string/ps_main_screen"
+        tools:layout="@layout/ps_fragment_form" >
+
+        <action
+            android:id="@+id/historyFragmentAction"
+            app:destination="@id/historyFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="ru.russianpost.payments.features.history.ui.HistoryFragment"
+        android:label="@string/ps_history"
+        tools:layout="@layout/ps_fragment_form" >
+
+        <action
+            android:id="@+id/historyFilterFragmentAction"
+            app:destination="@id/historyFilterFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyFilterFragment"
+        android:name="ru.russianpost.payments.features.history.ui.HistoryFilterFragment"
+        android:label="@string/ps_filter"
+        tools:layout="@layout/ps_fragment_form" >
+    </fragment>
+
+    <!--  Global actions  -->
+
+    <action
+        android:id="@+id/to_main_fragment_action"
+        app:destination="@id/mainFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim"
+        app:popUpTo="@id/main_nav_graph"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/taxFragmentAction"
+        app:destination="@id/tax_nav_graph"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+    <action
+        android:id="@+id/autoFinesFragmentAction"
+        app:destination="@id/auto_fines_nav_graph"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+</navigation>

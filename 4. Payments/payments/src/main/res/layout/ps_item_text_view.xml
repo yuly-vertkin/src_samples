@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="fv"
+            type="ru.russianpost.payments.base.ui.TextFieldValue" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_marginHorizontal="@{fv.horizontalMarginRes}"
+        app:layout_marginVertical="@{fv.verticalMarginRes}" >
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text"
+            style="@style/TextView.RussianPost.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{fv.text}"
+            android:textColor="@{fv.textColor}"
+            android:textSize="@{fv.textSize}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/right_text"
+            tools:text="Сумма штрафа со скидкой" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/right_text"
+            style="@style/TextView.RussianPost.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{fv.rightText}"
+            android:textColor="@{fv.textColor}"
+            android:textSize="@{fv.textSize}"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="250 р." />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

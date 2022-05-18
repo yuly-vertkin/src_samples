@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="fv"
+            type="ru.russianpost.payments.base.ui.AutoFineFieldValue" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/ps_horizontal_margin"
+        android:layout_marginVertical="@dimen/ps_auto_fine_vertical_margin"
+        android:onClick="@{() -> fv.onClick()}" >
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/ps_violation"
+            style="@style/TextView.RussianPost.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="@{fv.violation}"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/grayscale_asphalt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/date"
+            tools:text="Превышение скорости от 20 до 40 км./ч." />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/date"
+            style="@style/TextView.RussianPost.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{fv.date}"
+            android:maxLines="1"
+            android:textColor="@color/grayscale_plastique"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="08.08.2021" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sum"
+            style="@style/TextView.RussianPost.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{fv.sum}"
+            android:maxLines="1"
+            android:textColor="@color/grayscale_carbon"
+            app:layout_constraintStart_toStartOf="@id/ps_violation"
+            app:layout_constraintTop_toBottomOf="@id/ps_violation"
+            tools:text="500 руб." />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/details"
+            style="@style/TextView.RussianPost.FootnoteSecondary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{fv.details}"
+            android:maxLines="1"
+            android:textColor="@color/grayscale_plastique"
+            app:layout_constraintStart_toStartOf="@id/ps_violation"
+            app:layout_constraintTop_toBottomOf="@id/sum"
+            tools:text="Скидка действует до 22 августа"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

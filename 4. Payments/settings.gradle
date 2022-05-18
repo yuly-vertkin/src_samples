@@ -1,0 +1,15 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        if (!System.getenv("CI")) {
+            google()
+            mavenCentral()
+            maven { url "https://artifactory.tools.russianpost.ru/artifactory/remote-repos" }
+            maven { url "https://maven.google.com/" }
+        }
+        maven { url 'https://maven.repo.russianpost.ru/maven/' }
+    }
+}
+rootProject.name = "Payments demo"
+include ':app'
+include ':payments'

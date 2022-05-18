@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ps_zero_height">0dp</dimen>
+    <dimen name="ps_divider_height">1dp</dimen>
+    <dimen name="ps_big_divider_height">4dp</dimen>
+    <dimen name="ps_cell_height">36dp</dimen>
+    <dimen name="ps_divider_vertical_margin">16dp</dimen>
+    <dimen name="ps_scroll_margin_top">4dp</dimen>
+    <dimen name="ps_scroll_margin_bottom">32dp</dimen>
+    <dimen name="ps_button_bottom_margin">16dp</dimen>
+    <dimen name="ps_horizontal_margin">16dp</dimen>
+    <dimen name="ps_banner_vertical_margin">16dp</dimen>
+    <dimen name="ps_cell_vertical_margin">6dp</dimen>
+    <dimen name="ps_text_vertical_margin">8dp</dimen>
+    <dimen name="ps_auto_fine_vertical_margin">12dp</dimen>
+    <dimen name="ps_dimen_16dp">16dp</dimen>
+    <dimen name="ps_text_size_12sp">12sp</dimen>
+    <dimen name="ps_text_size_16sp">16sp</dimen>
+    <dimen name="ps_text_size_20sp">20sp</dimen>
+</resources>

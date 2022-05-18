@@ -1,0 +1,60 @@
+default:
+  tags:
+    - inet-docker # тэг указывает, какой раннер будет собирать проект, по этому тегу выбирается docker раннер, имеющий доступ в интернет
+
+stages:
+  - build
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradleCache
+
+before_script:
+  # Скрипт нужен, чтоб установить сертификат Почты в jre контейнера сборки. Если вы используете образ из инструкции, этот шаг не нужен
+#  - keytool -import -alias Russian-post-RootCA -trustcacerts -file $RootCA -keystore /etc/ssl/certs/java/cacerts -storepass changeit -noprompt
+
+#Пайплайн регулярных сборок
+Debug:
+  stage: build
+  rules:    # правила запуска сборки
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # на каждый Merge request
+      when: always
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH # в develop ветке на каждый коммит
+      when: always
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+      allow_failure: true
+    - when: manual # вручную
+
+  # Образ для сборки проекта
+  image: docker-registry.tools.russianpost.ru:5024/registry-mobile-app/android-base
+
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .gradleCache/
+
+  script:
+    - chmod +x ./gradlew
+    - ./gradlew clean test assembleDebug  # запускаем скрипты очистки, прогона всех тестов проекта и сборки flavorTestDebug
+  after_script:
+    - ls -lh ./app/build/outputs/apk/
+  artifacts:
+    paths:
+      - ./app/build/outputs/apk/    # Указываем папку с артифактами, она будет загружена на сервер
+
+#Пайплайн релиза
+#ReleaseCandidate:
+#  stage: build
+#  image: androidsdk/android-30
+#  rules:
+#    - when: manual
+#  script:
+#    - ls -lh ./
+#    - chmod +x ./gradlew
+#    - ./gradlew clean assembleRelease -Prelease_key_password="$release_key_password" --exclude-task lint
+#  after_script:
+#    - ls -lh ./app/build/outputs/apk/
+#  artifacts:
+#    paths:
+#      - ./app/build/outputs/apk/

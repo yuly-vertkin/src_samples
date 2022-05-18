@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ru.russianpost.payments">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/ps_app_name"
+        android:supportsRtl="false" >
+        <!--        android:name=".base.ui.PaymentApplication"-->
+
+        <activity android:name=".base.ui.PaymentActivity"
+            android:theme="@style/Theme.Payments"
+            android:exported="false">
+            <nav-graph android:value="@navigation/ps_main_navigation_graph" />
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/ps_filepaths" />
+        </provider>
+
+    </application>
+</manifest>
