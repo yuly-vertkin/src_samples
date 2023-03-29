@@ -1,6 +1,5 @@
 package ru.russianpost.payments.features.auto_fines.ui
 
-import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.russianpost.payments.R
 import ru.russianpost.payments.base.ui.BaseViewModel
 import ru.russianpost.payments.base.ui.CellFieldValue
@@ -10,23 +9,23 @@ import javax.inject.Inject
 /**
  * ViewModel настроек штрафа
  */
-@HiltViewModel
 internal class FineSettingsViewModel @Inject constructor(
     appContextProvider: AppContextProvider,
 ) : BaseViewModel(appContextProvider) {
 
-    override fun onCreateView() {
-        super.onCreateView()
+    override fun onCreate() {
+        super.onCreate()
 
         addField(
             CellFieldValue(
                 title = context.resources.getString(R.string.ps_documents),
                 startDrawableRes = R.drawable.ic24_user_passport,
+                startDrawableColorRes = R.color.grayscale_stone,
                 endDrawableRes = R.drawable.ic24_navigation_chevron_right,
+                endDrawableColorRes = R.color.grayscale_stone,
                 action = ::onShowDocuments,
             ),
         )
-        isBtnVisible.value = false
     }
 
     private fun onShowDocuments(data: Any?) {

@@ -1,17 +1,17 @@
 package ru.russianpost.payments.features.tax.ui
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import androidx.navigation.NavDirections
+import ru.russianpost.mobileapp.widget.Snackbar
 import ru.russianpost.payments.R
 import ru.russianpost.payments.base.domain.*
 import ru.russianpost.payments.base.ui.*
 import ru.russianpost.payments.entities.AppContextProvider
-import ru.russianpost.payments.entities.Response
+import ru.russianpost.payments.entities.payment_card.CardDetail
+import ru.russianpost.payments.features.payment_card.domain.PaymentCardRepository
+import ru.russianpost.payments.features.payment_card.ui.BaseCardWorkViewModel
 import ru.russianpost.payments.features.tax.domain.TaxDetailsRepository
 import ru.russianpost.payments.tools.CustomSpinnerAdapter
-import ru.russianpost.mobileapp.widget.Snackbar
 import ru.russianpost.payments.tools.SnackbarParams
 import ru.russianpost.payments.tools.toFloatOrDefault
 import javax.inject.Inject
@@ -19,14 +19,15 @@ import javax.inject.Inject
 /**
  * ViewModel ввода информации о платеже
  */
-@HiltViewModel
 internal class TaxPaymentInfoViewModel @Inject constructor(
     private val repository: TaxDetailsRepository,
+    cardRepository: PaymentCardRepository,
+    paramsRepository: PaymentStartParamsRepository,
     appContextProvider: AppContextProvider,
-) : BaseViewModel(appContextProvider) {
+) : BaseCardWorkViewModel(cardRepository, paramsRepository, appContextProvider) {
 
-    override fun onCreateView() {
-        super.onCreateView()
+    override fun onCreate() {
+        super.onCreate()
 
         val taxDetails = repository.getData()
 
@@ -42,7 +43,7 @@ internal class TaxPaymentInfoViewModel @Inject constructor(
                 InputFieldValue(
                     id = R.id.ps_tax_period,
                     title = getString(R.string.ps_tax_period),
-                    text = MutableLiveData(taxDetails.taxPeriod.substring(TAX_PERIOD_PREFIX.length)),
+                    text = MutableLiveData(taxDetails.taxPeriod.orEmpty().substring(TAX_PERIOD_PREFIX.length)),
                     hint = getString(R.string.ps_tax_period_hint),
                     assistive = getString(R.string.ps_tax_period_assistive),
                     formatter = BaseInputFieldFormatter(YEAR_LENGTH),
@@ -74,18 +75,44 @@ internal class TaxPaymentInfoViewModel @Inject constructor(
                     text = MutableLiveData(taxDetails.sum.toString()),
                     hint = getString(R.string.ps_payment_sum_hint),
                     inputType = INPUT_TYPE_NUMBER_DECIMAL,
-                    formatter = DecimalNumberFormatter(SUM_FRACTION_NUMBER),
+                    formatter = DecimalNumberFormatter(SUM_FRACTION_NUMBER, SUM_LENGTH),
                     validator = NonZeroNumberValidator(),
                 ),
+                InputFieldValue(
+                    id = R.id.ps_email,
+                    title = getString(R.string.ps_email),
+                    text = MutableLiveData(cardRepository.getData().email),
+                    hint = getString(R.string.ps_email_hint),
+                    inputType = INPUT_TYPE_TEXT,
+                    imeOptions = IME_ACTION_DONE,
+                    formatter = BaseInputFieldFormatter(),
+                    validator = EmailValidator(),
+                ),
             ))
+
+//            addField(
+//                ButtonFieldValue(
+//                    text = MutableLiveData(getString(R.string.ps_proceed)),
+//                    horizontalMarginRes = R.dimen.ps_horizontal_margin,
+//                    action = ::onButtonClick,
+//                ),
+//                isMainFields = false
+//            )
         }
     }
+    override fun showAdvice(data: Any?) { }
 
-    override fun onButtonClick() {
+    override fun geSelectCardAction(param: Array<CardDetail>) : NavDirections =
+        TaxPaymentInfoFragmentDirections.selectCardAction(param)
+
+    override fun onButtonClick(data: Any?) {
         if (!validateAll(context.resources)) {
-            showSnackbar.value = SnackbarParams(R.string.ps_error_in_form, Snackbar.Style.ERROR)
+            showSnackbar.value = SnackbarParams(R.string.ps_error_in_form, style = Snackbar.Style.ERROR)
             return
         }
+
+        val email = getFieldText(R.id.ps_email)
+        cardRepository.saveData(cardRepository.getData().copy(email = email))
 
         val taxDetails = repository.getData().copy(
             paymentBasis = getFieldText(R.id.ps_payment_basis),
@@ -96,20 +123,15 @@ internal class TaxPaymentInfoViewModel @Inject constructor(
             sum = getFieldText(R.id.ps_payment_sum).toFloatOrDefault(0f),
         )
 
-        viewModelScope.launch {
-            repository.sendTaxDetails(taxDetails).collect {
-                isBtnLoading.value = it is Response.Loading
-                when(it) {
-                    is Response.Success -> {
-                        showSnackbar.value = SnackbarParams(R.string.ps_data_sent)
-                        taxDetails.id = it.data
-                        repository.saveData(taxDetails)
-                        action.value = TaxPaymentInfoFragmentDirections.toTaxPaymentConfirmationAction()
-                    }
-                    is Response.Error -> showDialog.value = DialogTypes.PAYMENT_ERROR
-                    else -> {}
-                }
-            }
-        }
+        processNetworkCall(
+            action = { repository.sendTaxDetails(taxDetails) },
+            onSuccess = {
+                showSnackbar.value = SnackbarParams(R.string.ps_data_sent)
+                taxDetails.id = it
+                repository.saveData(taxDetails)
+                action.value = TaxPaymentInfoFragmentDirections.toAuthDialogAction()
+            },
+            onError = { showServiceUnavailableDialog() },
+        )
     }
 }

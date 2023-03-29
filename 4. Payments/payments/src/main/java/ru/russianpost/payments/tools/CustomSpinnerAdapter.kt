@@ -1,12 +1,13 @@
 package ru.russianpost.payments.tools
 
 import android.content.Context
-import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
+import ru.russianpost.payments.R
 
 internal class CustomSpinnerAdapter(
     context: Context,
@@ -18,7 +19,8 @@ internal class CustomSpinnerAdapter(
     override fun getDropDownView(pos: Int, convertView: View?, parent: ViewGroup): View {
         val v = super.getDropDownView(pos, convertView, parent)
         val tv = v.findViewById<View>(android.R.id.text1) as TextView
-        tv.setTextColor(if (isEnabled(pos)) Color.BLACK else Color.GRAY)
+        tv.setTextColor(if (isEnabled(pos)) ContextCompat.getColor(context, R.color.grayscale_carbon)
+                        else ContextCompat.getColor(context, R.color.grayscale_plastique))
         return v
     }
 

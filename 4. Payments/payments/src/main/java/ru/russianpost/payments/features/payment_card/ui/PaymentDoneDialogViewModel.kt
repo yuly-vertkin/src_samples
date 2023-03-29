@@ -1,29 +1,29 @@
 package ru.russianpost.payments.features.payment_card.ui
 
-import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.russianpost.payments.R
 import ru.russianpost.payments.base.ui.BaseViewModel
 import ru.russianpost.payments.base.ui.CellFieldValue
 import ru.russianpost.payments.base.ui.DividerFieldValue
 import ru.russianpost.payments.entities.AppContextProvider
+import ru.russianpost.payments.entities.payment_card.PaymentDoneParams
 import javax.inject.Inject
 
 /**
  * ViewModel нижнего диалог фрагмента
  */
-@HiltViewModel
 internal class PaymentDoneDialogViewModel @Inject constructor(
     appContextProvider: AppContextProvider,
 ) : BaseViewModel(appContextProvider) {
 
-    override fun onCreateView() {
-        super.onCreateView()
+    override fun onCreate() {
+        super.onCreate()
 
         with(context.resources) {
             addFields(listOf(
                 CellFieldValue(
                     title = getString(R.string.ps_save_check),
                     startDrawableRes = R.drawable.ic24_action_download,
+                    startDrawableColorRes = R.color.grayscale_stone,
                     action = ::onSaveCheck,
                 ),
                 DividerFieldValue(
@@ -32,11 +32,11 @@ internal class PaymentDoneDialogViewModel @Inject constructor(
                 CellFieldValue(
                     title = getString(R.string.ps_send_check),
                     startDrawableRes = R.drawable.ic24_action_share_v2,
+                    startDrawableColorRes = R.color.grayscale_stone,
                     action = ::onSendCheck,
                 ),
             ))
         }
-        isBtnVisible.value = false
     }
 
     private fun onSaveCheck(data: Any?) {

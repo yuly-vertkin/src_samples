@@ -2,16 +2,21 @@ default:
   tags:
     - inet-docker # тэг указывает, какой раннер будет собирать проект, по этому тегу выбирается docker раннер, имеющий доступ в интернет
 
+  # Образ для сборки проекта
+  image: mobiledev-reg.repo.russianpost.ru/android-base
+
 stages:
   - build
+
+include: /ext_env.yml
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   GRADLE_USER_HOME: $CI_PROJECT_DIR/.gradleCache
 
-before_script:
+#before_script:
   # Скрипт нужен, чтоб установить сертификат Почты в jre контейнера сборки. Если вы используете образ из инструкции, этот шаг не нужен
-#  - keytool -import -alias Russian-post-RootCA -trustcacerts -file $RootCA -keystore /etc/ssl/certs/java/cacerts -storepass changeit -noprompt
+  #  - keytool -import -alias Russian-post-RootCA -trustcacerts -file $RootCA -keystore /etc/ssl/certs/java/cacerts -storepass changeit -noprompt
 
 #Пайплайн регулярных сборок
 Debug:
@@ -26,35 +31,49 @@ Debug:
       allow_failure: true
     - when: manual # вручную
 
-  # Образ для сборки проекта
-  image: docker-registry.tools.russianpost.ru:5024/registry-mobile-app/android-base
-
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - .gradleCache/
 
   script:
-    - chmod +x ./gradlew
-    - ./gradlew clean test assembleDebug  # запускаем скрипты очистки, прогона всех тестов проекта и сборки flavorTestDebug
+#    - chmod +x ./gradlew
+#    - ./gradlew clean test assembleDebug  # запускаем скрипты очистки, прогона всех тестов проекта и сборки flavorTestDebug
+    - ./gradlew test :payments:lint assembleDebug  # запускаем скрипты очистки, прогона всех тестов проекта, lint и сборки flavorTestDebug
   after_script:
     - ls -lh ./app/build/outputs/apk/
   artifacts:
     paths:
       - ./app/build/outputs/apk/    # Указываем папку с артифактами, она будет загружена на сервер
 
-#Пайплайн релиза
-#ReleaseCandidate:
-#  stage: build
-#  image: androidsdk/android-30
-#  rules:
-#    - when: manual
-#  script:
-#    - ls -lh ./
-#    - chmod +x ./gradlew
-#    - ./gradlew clean assembleRelease -Prelease_key_password="$release_key_password" --exclude-task lint
-#  after_script:
-#    - ls -lh ./app/build/outputs/apk/
-#  artifacts:
-#    paths:
-#      - ./app/build/outputs/apk/
+build_release:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $ReleaseBranch
+      when: manual
+    - if: $CI_COMMIT_REF_NAME != $ReleaseBranch
+      when: never
+      allow_failure: true
+  stage: build
+  script:
+    - ./gradlew :$MODULE_NAME:publishAndroidLibraryPublicationToMavenRepository
+    - chmod +x ./gitlab_push_tag.sh
+    - ./gitlab_push_tag.sh -token $WRITE_LEVEL_TOKEN -id $CI_PROJECT_ID -r $CI_COMMIT_SHA -tag $GRADLE_LIBRARY_VERSION -m release "$GRADLE_LIBRARY_VERSION"
+  artifacts:
+    paths:
+      - ./$MODULE_NAME/build/outputs/aar/*.aar
+
+build_snapshot:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $ReleaseBranch
+      when: manual
+    - if: $CI_COMMIT_REF_NAME != $ReleaseBranch
+      when: manual
+      allow_failure: true
+  stage: build
+  script:
+    - env
+    - ./gradlew :$MODULE_NAME:publishAndroidLibraryPublicationToMavenRepository
+  artifacts:
+    paths:
+      - ./$MODULE_NAME/build/outputs/aar/*.aar
+

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -18,6 +17,7 @@
         app:background="@{fv.backgroundRes}"
         app:design_title="@{fv.title}"
         app:design_subtitle="@{fv.subtitle}"
+        app:design_titleColor="@{fv.titleColorRes}"
         app:design_drawableStart="@{fv.startDrawableRes}"
         app:design_drawableStartTint="@{fv.startDrawableColorRes}"
         app:design_drawableEnd="@{fv.endDrawableRes}"

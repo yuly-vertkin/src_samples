@@ -1,6 +1,5 @@
 package ru.russianpost.payments.features.auto_fines.ui
 
-import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.russianpost.payments.R
 import ru.russianpost.payments.base.ui.BaseViewModel
 import ru.russianpost.payments.base.ui.CellFieldValue
@@ -10,15 +9,14 @@ import ru.russianpost.payments.entities.auto_fines.AutoFineType
 import javax.inject.Inject
 
 /**
- * ViewModel нижнего диалог добавления СТС или ВУ
+ * ViewModel нижнего диалога добавления СТС или ВУ
  */
-@HiltViewModel
 internal class FineAddDocumentDialogViewModel @Inject constructor(
     appContextProvider: AppContextProvider,
 ) : BaseViewModel(appContextProvider) {
 
-    override fun onCreateView() {
-        super.onCreateView()
+    override fun onCreate() {
+        super.onCreate()
 
         with(context.resources) {
             addFields(listOf(
@@ -35,7 +33,6 @@ internal class FineAddDocumentDialogViewModel @Inject constructor(
                 ),
             ))
         }
-        isBtnVisible.value = false
     }
 
     private fun onAddVrc(data: Any?) {

@@ -3,13 +3,12 @@
     package="ru.russianpost.payments">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
 
     <application
         android:allowBackup="true"
-        android:label="@string/ps_app_name"
         android:supportsRtl="false" >
-        <!--        android:name=".base.ui.PaymentApplication"-->
 
         <activity android:name=".base.ui.PaymentActivity"
             android:theme="@style/Theme.Payments"
@@ -18,8 +17,8 @@
         </activity>
 
         <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:name=".PaymentFileProvider"
+            android:authorities="${applicationId}.payments.provider"
             android:grantUriPermissions="true"
             android:exported="false">
             <meta-data

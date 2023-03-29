@@ -1,10 +1,12 @@
 package ru.russianpost.payments.features.tax.ui
 
 import androidx.lifecycle.MutableLiveData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.russianpost.mobileapp.widget.Snackbar
 import ru.russianpost.payments.R
-import ru.russianpost.payments.base.domain.*
+import ru.russianpost.payments.base.domain.BaseInputFieldFormatter
+import ru.russianpost.payments.base.domain.BaseInputFieldValidator
+import ru.russianpost.payments.base.domain.EmptyFieldValidator
+import ru.russianpost.payments.base.domain.TextOnlyFieldFormatter
 import ru.russianpost.payments.base.ui.*
 import ru.russianpost.payments.entities.AppContextProvider
 import ru.russianpost.payments.features.tax.domain.TaxDetailsRepository
@@ -15,14 +17,13 @@ import javax.inject.Inject
 /**
  * ViewModel ввода информации о плательщике
  */
-@HiltViewModel
 internal class TaxPayerInfoViewModel @Inject constructor(
     private val repository: TaxDetailsRepository,
     appContextProvider: AppContextProvider,
 ) : BaseViewModel(appContextProvider) {
 
-    override fun onCreateView() {
-        super.onCreateView()
+    override fun onCreate() {
+        super.onCreate()
 
         val taxDetails = repository.getData()
 
@@ -105,18 +106,22 @@ internal class TaxPayerInfoViewModel @Inject constructor(
                     validator = BaseInputFieldValidator(),
                 ),
 */
-                CheckboxFieldValue(
-                    id = R.id.ps_confirm_not_public_official,
-                    title = getString(R.string.ps_confirm_not_public_official),
-                    selected = MutableLiveData(taxDetails.notPublicOfficial),
-                ),
             ))
+
+            addField(
+                ButtonFieldValue(
+                    text = MutableLiveData(getString(R.string.ps_proceed)),
+                    horizontalMarginRes = R.dimen.ps_horizontal_margin,
+                    action = ::onButtonClick,
+                ),
+                isMainFields = false
+            )
         }
     }
 
-    override fun onButtonClick() {
+    private fun onButtonClick(data: Any?) {
         if (!validateAll(context.resources)) {
-            showSnackbar.value = SnackbarParams(R.string.ps_error_in_form, Snackbar.Style.ERROR)
+            showSnackbar.value = SnackbarParams(R.string.ps_error_in_form, style = Snackbar.Style.ERROR)
             return
         }
 
@@ -130,7 +135,6 @@ internal class TaxPayerInfoViewModel @Inject constructor(
 //            email = getFieldText(R.id.email),
 //            servicePayerIdentifier = getFieldText(R.id.service_payer_id),
 //            uniquePaymentIdentifier = getFieldText(R.id.payment_uid),
-            notPublicOfficial = getCheckboxValue(R.id.ps_confirm_not_public_official),
         )
         repository.saveData(taxDetails)
 

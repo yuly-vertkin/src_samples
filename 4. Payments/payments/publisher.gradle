@@ -1,0 +1,185 @@
+// Подключаем плагин для публикации
+//file:noinspection GrMethodMayBeStatic
+//file:noinspection Annotator
+//file:noinspection GroovyImplicitNullArgumentCall
+apply plugin: 'maven-publish'
+
+buildscript {
+    repositories {
+        maven {
+            url 'https://maven.repo.russianpost.ru/maven/'
+            metadataSources {
+                mavenPom()
+            }
+        }
+    }
+
+    dependencies {
+        classpath group: 'org.yaml', name: 'snakeyaml', version: '1.19'
+    }
+}
+
+ext {
+    // Группа для артефакта
+    libraryGroupId = "ru.russianpost.android"
+    // Имя артефакта
+    libraryArtifact = getModuleNameFromFile()
+    // Текущая версия
+    libraryVersion = getVersionFromFile()
+    if (!isReleaseBranch()) {
+        if (!isDevelopBranch()) {
+            libraryVersion += "-" + getWorkingBranch().replace("/", ".")
+        }
+        libraryVersion += "-SNAPSHOT"
+    }
+    println "libraryVersion: $libraryVersion"
+    // Логин пользователя, от которого будет производиться загрузка
+    contributorUserName = System.getenv('TEAM_USER')
+    println "contributorUserName: $contributorUserName"
+    // Пароль пользователя, от которого будет производиться загрузка
+    contributorPassword = getDecodedBase64Env('TEAM_PASS')
+}
+
+// Публикуем
+publishing {
+
+// В список репозиториев
+    repositories {
+// Подключаем наш репозиторий
+        maven {
+// Указываем данные для авторизации
+            credentials {
+                username "$contributorUserName"
+                password "$contributorPassword"
+            }
+// И ссылку на репозиторий
+            url "${getRepositoryFullUrl()}"
+        }
+    }
+
+// Настраиваем задание публикации для maven-publish плагина
+    publications {
+// AndroidLibrary - это просто имя, на основании которого
+// сформируется задание, оно может быть любым
+        AndroidLibrary(MavenPublication) {
+
+// Настраиваем параметры публикации артефакта
+            groupId libraryGroupId
+            artifactId libraryArtifact
+            version libraryVersion
+
+// Указываем универсальный путь к артефакту
+            artifact "$buildDir/outputs/aar/${project.getName()}-release.aar"
+
+            pom {
+// Добавляем все зависимости первого уровня в публикацию для того,
+// чтобы избежать ClassNotFoundException при использовании
+// библиотеки.
+                withXml {
+                    def dependencies = asNode().appendNode("dependencies")
+                    configurations.getByName("releaseCompileClasspath")
+                            .getResolvedConfiguration()
+                            .getFirstLevelModuleDependencies()
+                            .each {
+                                def dependency = dependencies.appendNode("dependency")
+                                dependency.appendNode("groupId", it.moduleGroup)
+                                dependency.appendNode("artifactId", it.moduleName)
+                                dependency.appendNode("version", it.moduleVersion)
+                            }
+                } // withXml
+            } // pom
+        } // AndroidLibrary
+    } // publications
+
+// Выполняем assembleRelease перед публикацией
+    model {
+        tasks.publishAndroidLibraryPublicationToMavenRepository {
+            dependsOn project.tasks.assembleRelease
+        }
+    }
+} //publishing
+
+String getWorkingBranch() {
+    String ciBranch = System.getenv("CI_COMMIT_BRANCH")
+    if (ciBranch != null && !ciBranch.isEmpty()) {
+        return ciBranch
+    }
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    } catch (ignore) {
+        println "$ignore"
+        return ""
+    }
+}
+
+boolean isReleaseBranch() {
+    return getWorkingBranch() == getReleaseBranch()
+}
+
+boolean isDevelopBranch() {
+    String branch = getWorkingBranch()
+    return branch == "develop"
+}
+
+String getVersionFromFile() {
+    def cfg = new org.yaml.snakeyaml.Yaml().load(new File("ext_env.yml").newInputStream())
+    return cfg.variables.GRADLE_LIBRARY_VERSION
+}
+
+String getModuleNameFromFile() {
+    def cfg = new org.yaml.snakeyaml.Yaml().load(new File("ext_env.yml").newInputStream())
+    return cfg.variables.MODULE_NAME
+}
+
+String getReleaseBranch() {
+    String ciMasterBranch = System.getenv("CI_DEFAULT_BRANCH")
+    if (ciMasterBranch == null) {
+        return ciMasterBranch
+    } else {
+        return "master"
+    }
+}
+
+String getRepositoryFullUrl() {
+    String repoUrl = getRepoUrl()
+    String releaseSlug = getReleaseSlug()
+    String snapshotSlug = getSnapshotSlug()
+    // URL для Release репозитория
+    String repositoryReleaseUrl = "$repoUrl$releaseSlug"
+    // URL для Snapshot репозитория
+    String repositorySnapshotUrl = "$repoUrl$snapshotSlug"
+    if (isReleaseBranch()) {
+        println "repositoryFullUrl: $repositoryReleaseUrl"
+        return repositoryReleaseUrl
+    } else {
+        println "repositoryFullUrl: $repositorySnapshotUrl"
+        return repositorySnapshotUrl
+    }
+}
+
+String getRepoUrl() {
+    return System.getenv("REPOSITORY_URL")
+}
+
+String getReleaseSlug() {
+    return System.getenv("RELEASE_URL_POSTFIX")
+}
+
+String getSnapshotSlug() {
+    return System.getenv("SNAPSHOT_URL_POSTFIX")
+}
+
+String getDecodedBase64Env(String key) {
+    String res = System.getenv(key)
+    if (res != null) {
+        res = new String(res.decodeBase64())
+    } else {
+        res = ""
+    }
+    return res
+}

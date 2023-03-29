@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--history    -->
+<!-- history -->
     <item name="ps_filter_tax" type="id" />
     <item name="ps_filter_fine" type="id" />
     <item name="ps_year" type="id" />
     <item name="ps_month" type="id" />
     <item name="ps_week" type="id" />
+    <item name="ps_custom_period" type="id" />
 
-<!--tax-->
-    <item name="ps_tax_details" type="id" />
+<!-- tax -->
+    <item name="ps_tax" type="id" />
+    <item name="ps_uid_search" type="id" />
+    <item name="ps_uid_tax_search" type="id" />
     <item name="ps_bank_id_code" type="id"/>
     <item name="ps_account_number" type="id"/>
     <item name="ps_budget_classification_code" type="id"/>
@@ -25,16 +28,17 @@
     <item name="ps_last_name" type="id"/>
     <item name="ps_address" type="id"/>
     <item name="ps_email" type="id"/>
-    <item name="ps_service_payer_id" type="id"/>
-    <item name="ps_payment_uid" type="id"/>
+    <item name="ps_confirm_button" type="id"/>
     <item name="ps_confirm_not_public_official" type="id"/>
     <item name="ps_payment_basis" type="id"/>
     <item name="ps_tax_period" type="id"/>
     <item name="ps_charges_uid_document" type="id"/>
     <item name="ps_payment_purpose" type="id"/>
     <item name="ps_payment_sum" type="id"/>
-    <item name="ps_payment_confirmation" type="id"/>
-    <item name="ps_full_name" type="id"/>
+    <item name="ps_commission" type="id"/>
+    <item name="ps_total" type="id"/>
+    <item name="ps_sender_full_name" type="id"/>
+    <item name="ps_sender_address" type="id"/>
     <item name="ps_birth_date" type="id"/>
     <item name="ps_mobile_phone" type="id"/>
     <item name="ps_citizenship" type="id"/>
@@ -43,37 +47,28 @@
     <item name="ps_issued_by" type="id"/>
     <item name="ps_when_issued" type="id"/>
     <item name="ps_organization_name" type="id"/>
-    <item name="ps_card_number" type="id"/>
-    <item name="ps_valid_thru" type="id"/>
-    <item name="ps_cvc" type="id"/>
+    <item name="ps_zip_code" type="id"/>
     <item name="ps_payment_done" type="id"/>
-    <item name="ps_view_check" type="id"/>
-    <item name="ps_save_check" type="id"/>
-    <item name="ps_send_check" type="id"/>
     <item name="ps_sender" type="id"/>
     <item name="ps_recipient" type="id"/>
 
-<!--auto_fines-->
+<!-- auto_fines -->
     <item name="ps_auto_fines" type="id" />
     <item name="ps_vehicle_registration_certificate" type="id" />
     <item name="ps_driver_license" type="id" />
+    <item name="ps_uin" type="id" />
     <item name="ps_save_documents" type="id" />
+    <item name="ps_fines_search" type="id" />
     <item name="ps_fines_not_found" type="id" />
-    <item name="ps_violation" type="id" />
-    <item name="ps_fine_date" type="id" />
-    <item name="ps_fine_place" type="id" />
     <item name="ps_doc_number" type="id" />
-    <item name="ps_sum_payment" type="id" />
     <item name="ps_paid" type="id" />
 
 
+    <item name="ps_button1" type="id" />
     <item name="ps_container1" type="id"/>
-    <item name="ps_container2" type="id"/>
-    <item name="ps_container3" type="id"/>
-    <item name="ps_divider0" type="id"/>
-    <item name="ps_divider1" type="id"/>
-    <item name="ps_divider2" type="id"/>
-    <item name="ps_divider3" type="id"/>
-    <item name="ps_divider4" type="id"/>
-    <item name="ps_divider5" type="id"/>
+
+    <item name="ps_test1" type="id"/>
+    <item name="ps_test2" type="id"/>
+    <item name="ps_test3" type="id"/>
+    <item name="ps_test4" type="id"/>
 </resources>

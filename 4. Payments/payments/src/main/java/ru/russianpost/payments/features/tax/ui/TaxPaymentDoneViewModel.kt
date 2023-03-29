@@ -2,47 +2,48 @@ package ru.russianpost.payments.features.tax.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import ru.russianpost.payments.R
+import ru.russianpost.payments.base.di.AssistedSavedStateViewModelFactory
 import ru.russianpost.payments.base.domain.PaymentStartParamsRepository
 import ru.russianpost.payments.base.ui.CellFieldValue
 import ru.russianpost.payments.entities.AppContextProvider
-import ru.russianpost.payments.entities.Response
 import ru.russianpost.payments.features.payment_card.domain.PaymentCardRepository
 import ru.russianpost.payments.features.payment_card.ui.PaymentDoneViewModel
 import ru.russianpost.payments.features.tax.domain.TaxDetailsRepository
-import javax.inject.Inject
 
 /**
  * ViewModel результатов платежа
  */
-@HiltViewModel
-internal class TaxPaymentDoneViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+internal class TaxPaymentDoneViewModel @AssistedInject constructor(
+    @Assisted savedStateHandle: SavedStateHandle,
     private val repository: TaxDetailsRepository,
-    private val cardRepository: PaymentCardRepository,
-    private val paramsRepository: PaymentStartParamsRepository,
+    cardRepository: PaymentCardRepository,
+    paramsRepository: PaymentStartParamsRepository,
     appContextProvider: AppContextProvider,
-) : PaymentDoneViewModel(savedStateHandle, cardRepository, appContextProvider) {
+) : PaymentDoneViewModel(savedStateHandle, cardRepository, paramsRepository, appContextProvider) {
 
-    override fun onCreateView() {
-        super.onCreateView()
+    @AssistedFactory
+    interface Factory : AssistedSavedStateViewModelFactory<TaxPaymentDoneViewModel> {
+        override fun create(savedStateHandle: SavedStateHandle): TaxPaymentDoneViewModel
+    }
+
+    override fun onCreate() {
+        super.onCreate()
 
         var taxDetails = repository.getData()
-        val params = paramsRepository.getData()
-        if(params.id.isNotEmpty()) {
-            viewModelScope.launch {
-                repository.getTaxDetails(params.id).collect {
-                    when (it) {
-                        is Response.Success -> taxDetails = it.data
-                        is Response.Error -> println("Error")
-                        else -> {}
-                    }
-                }
-            }
-        }
+        val paymentId = getAndClearIdParam()
+
+        paymentId?.let {
+            processNetworkCall(
+                action = { repository.getTaxDetails(it) },
+                onSuccess = { taxDetails = it },
+                onError = { showServiceUnavailableDialog() },
+            )
+        } ?: showServiceUnavailableDialog()
+
         with(context.resources) {
             addFields(listOf(
                 CellFieldValue(
@@ -66,7 +67,6 @@ internal class TaxPaymentDoneViewModel @Inject constructor(
                     isValueCell = true,
                 ),
             ))
-            btnLabel.value = getString(R.string.ps_back_main)
         }
     }
 

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="fv"
+            type="ru.russianpost.payments.base.ui.EmptyFieldValue" />
+    </data>
+
+    <ru.russianpost.mobileapp.widget.EmptyView
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_marginHorizontal="@{fv.horizontalMarginRes}"
+        app:layout_marginVertical="@{fv.verticalMarginRes}"
+        app:design_title="@{fv.title}"
+        app:design_subtitle="@{fv.subtitle}"
+        app:design_empty_icon="@{fv.drawableRes}"
+        app:design_empty_iconTint="@{fv.drawableColorRes}"
+        app:design_empty_actionText="@{fv.actionText}"
+        app:design_empty_actionClick="@{() -> fv.onClick()}" />
+<!--    app:design_titleColor="@{fv.titleColorRes}"-->
+<!--    app:background="@{fv.backgroundRes}"-->
+
+</layout>

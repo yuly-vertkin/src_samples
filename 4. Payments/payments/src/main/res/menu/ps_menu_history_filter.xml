@@ -2,8 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_filter"
+    <item android:id="@+id/menu_item1"
         android:title="@string/ps_action_filter"
         android:icon="@drawable/ic24_control_changer"
+        app:iconTint="@color/common_xenon"
         app:showAsAction="ifRoom" />
 </menu>

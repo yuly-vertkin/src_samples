@@ -2,8 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_delete"
+    <item android:id="@+id/menu_item1"
         android:title="@string/ps_action_delete"
         android:icon="@drawable/ic24_action_delete"
+        app:iconTint="@color/common_xenon"
         app:showAsAction="ifRoom" />
 </menu>

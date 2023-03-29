@@ -1,80 +1,93 @@
 package ru.russianpost.payments.features.payment_card.ui
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import dagger.hilt.android.lifecycle.HiltViewModel
-import ru.russianpost.mobileapp.widget.Snackbar
-import ru.russianpost.payments.R
-import ru.russianpost.payments.base.domain.*
-import ru.russianpost.payments.base.ui.*
+import ru.russianpost.payments.base.domain.PaymentStartParamsRepository
+import ru.russianpost.payments.base.ui.BaseViewModel
+import ru.russianpost.payments.base.ui.METRICS_ACTION_PAYMENT_FAIL
+import ru.russianpost.payments.base.ui.METRICS_ACTION_PAYMENT_SUCCESS
+import ru.russianpost.payments.base.ui.METRICS_TARGET_SELF
+import ru.russianpost.payments.data.network.sendAnalyticsEvent
 import ru.russianpost.payments.entities.AppContextProvider
+import ru.russianpost.payments.entities.payment_card.PaymentCard
+import ru.russianpost.payments.entities.payment_card.PaymentStatus
+import ru.russianpost.payments.entities.payment_card.Receipt
 import ru.russianpost.payments.features.payment_card.domain.PaymentCardRepository
-import ru.russianpost.payments.tools.SnackbarParams
 import javax.inject.Inject
 
 /**
  * ViewModel оплаты картой
  */
-@HiltViewModel
 internal class PaymentCardViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val repository: PaymentCardRepository,
+    private val paramsRepository: PaymentStartParamsRepository,
     appContextProvider: AppContextProvider,
 ) : BaseViewModel(appContextProvider) {
+    val url = MutableLiveData<String>("")
 
-    override fun onCreateView() {
-        super.onCreateView()
+    override fun onCreate() {
+        super.onCreate()
 
-        val paymentCard = repository.getData()
-        val sum = savedStateHandle.get<Float>(FRAGMENT_PARAMS_NAME)
+        val cardData = repository.getData()
+        val card = PaymentCard(
+            uin = cardData.uin,
+            cardUid = cardData.cardUid,
+            description = cardData.description.orEmpty(),
+            redirectApprove = CARD_APPROVE_URL,
+            redirectDecline = CARD_DECLINE_URL,
+            redirectCancel = CARD_CANCEL_URL,
+        )
 
-        with(context.resources) {
-            addFields(listOf(
-                InputFieldValue(
-                    id = R.id.ps_card_number,
-                    text = MutableLiveData(paymentCard.cardNumber),
-                    hint = getString(R.string.ps_card_number_hint),
-                    formatter = TemplateFieldFormatter(CARD_NUMBER_TEMPLATE),
-                    validator = LuhnCardNumberValidator(),
-                ),
-                ContainerFieldValue(
-                    id = R.id.ps_container1,
-                    items = listOf(
-                        InputFieldValue(
-                            id = R.id.ps_valid_thru,
-                            text = MutableLiveData(paymentCard.validThru),
-                            hint = getString(R.string.ps_valid_thru_hint),
-                            formatter = TemplateFieldFormatter(CARD_VALID_THRU_TEMPLATE),
-                            validator = CardValidThruValidator(),
-                        ),
-                        InputFieldValue(
-                            id = R.id.ps_cvc,
-                            text = MutableLiveData(paymentCard.cvc),
-                            hint = getString(R.string.ps_cvc_hint),
-                            inputType = "numberPassword",
-                            formatter = BaseInputFieldFormatter(CARD_CVC_LENGTH),
-                            validator = BaseInputFieldValidator(CARD_CVC_LENGTH),
-                        ),
-                    ),
-                ),
-            ))
-            btnLabel.value = getString(R.string.ps_pay_sum, makeSum(sum))
+        processNetworkCall(
+            action = { repository.paymentCard(card) },
+            onSuccess = { url.value = it.paymentReference },
+            onError = { showPaymentServiceErrorDialog { actionBack.value = true }},
+        )
+    }
+
+    fun onUrlLoading(loadUrl: String) : Boolean {
+        when (loadUrl) {
+            CARD_APPROVE_URL -> createReceipt { action.value = PaymentCardFragmentDirections.toPaymentDoneAction() }
+            CARD_DECLINE_URL -> deletePaymentLink { setStatusParamAndGoBack(PaymentStatus.CARD_DECLINE) }
+            CARD_CANCEL_URL -> deletePaymentLink { setStatusParamAndGoBack(PaymentStatus.CARD_CANCEL) }
+            else -> { /* nothing to do */ }
+        }
+        return loadUrl == CARD_APPROVE_URL || loadUrl == CARD_DECLINE_URL || loadUrl == CARD_CANCEL_URL
+    }
+
+    private fun createReceipt(action: () -> Unit) {
+        sendAnalyticsEvent(title.value, METRICS_TARGET_SELF, METRICS_ACTION_PAYMENT_SUCCESS)
+
+        val receipt = Receipt(
+            uin = repository.getData().uin,
+            email = repository.getData().email.orEmpty(),
+        )
+        processNetworkCall(
+            action = { repository.createReceipt(receipt) },
+            onSuccess = { action() },
+            onError = { action() },
+        )
+    }
+
+    private fun deletePaymentLink(action: () -> Unit) {
+        repository.getData().uin?.let {
+            processNetworkCall(
+                action = { repository.deletePaymentLink(it) },
+                onSuccess = { action() },
+                onError = { action() },
+            )
         }
     }
 
-    override fun onButtonClick() {
-        if (!validateAll(context.resources)) {
-            showSnackbar.value = SnackbarParams(R.string.ps_error_in_form, Snackbar.Style.ERROR)
-            return
-        }
+    private fun setStatusParamAndGoBack(paymentStatus: PaymentStatus) {
+        sendAnalyticsEvent(title.value, METRICS_TARGET_SELF, METRICS_ACTION_PAYMENT_FAIL)
 
-        val paymentCard = repository.getData().copy(
-            cardNumber = getFieldText(R.id.ps_card_number),
-            validThru = getFieldText(R.id.ps_valid_thru),
-            cvc = getFieldText(R.id.ps_cvc),
-        )
-        repository.saveData(paymentCard)
+        paramsRepository.saveData(paramsRepository.getData().copy(paymentStatus = paymentStatus))
+        actionBack.value = true
+    }
 
-        action.value = PaymentCardFragmentDirections.toPaymentDoneAction()
+    companion object {
+        const val CARD_APPROVE_URL = "android-app://ru.russianpost.payments/approve"
+        const val CARD_DECLINE_URL = "android-app://ru.russianpost.payments/decline"
+        const val CARD_CANCEL_URL = "android-app://ru.russianpost.payments/cancel"
     }
 }

@@ -1,6 +1,4 @@
 <resources>
-    <string name="ps_app_name">Платежи</string>
-
 <!--Buttons-->
     <string name="ps_ok_button">OK</string>
     <string name="ps_cancel_button">Отмена</string>
@@ -11,18 +9,55 @@
     <string name="ps_save">Сохранить</string>
     <string name="ps_save_or_send">Сохранить или отправить</string>
     <string name="ps_search">Искать</string>
-    <string name="ps_pay">Оплатить</string>
-    <string name="ps_pay_sum">Оплатить %s</string>
+    <string name="ps_pay_card">Оплатить %s</string>
+    <string name="ps_pay_online">Оплатить онлайн</string>
+    <string name="ps_pay_simple">Оплатить</string>
     <string name="ps_understand">Понятно</string>
-    <string name="ps_close">Закрыть</string>
+    <string name="ps_show">Показать</string>
+    <string name="ps_auth_button">Войти через Госуслуги</string>
+    <string name="ps_well">Хорошо</string>
 
 <!-- menu -->
     <string name="ps_action_settings">Настройки</string>
     <string name="ps_action_delete">Удалить</string>
+    <!--suppress UnusedResources -->
     <string name="ps_action_history">История</string>
     <string name="ps_action_filter">Фильтр</string>
+    <string name="ps_action_filter_reset">Сбросить всё</string>
+    <string name="ps_action_scan">Сканировать</string>
+
+<!-- Main -->
+    <!-- screens -->
+    <string name="ps_main_screen">Платежи</string>
+
+    <string name="ps_tax">Налоги</string>
+    <string name="ps_auto_fines">Штрафы ГИБДД</string>
+    <string name="ps_old_payment_section1">Переводы</string>
+    <string name="ps_old_payment_section2">Коммунальные платежи</string>
+    <string name="ps_old_payment_section3">Сотовая связь</string>
+    <string name="ps_old_payment_section4">Телефония</string>
+    <string name="ps_old_payment_section5">Интернет</string>
+    <string name="ps_old_payment_section6">Телевидение</string>
+    <string name="ps_old_payment_section7">Погашение кредита</string>
+    <string name="ps_old_payment_section8">Прочее</string>
+
+    <string name="ps_uri_scheme">android-app</string>
+    <string name="ps_uri_host">ru.russianpost.payments</string>
+    <string name="ps_uid_tax_detail_url">android-app://ru.russianpost.payments/uid_tax_detail_fragment</string>
+    <string name="ps_fine_detail_url">android-app://ru.russianpost.payments/fine_detail_fragment</string>
+
+<!-- Scan -->
+    <string name="ps_scan_qr_code">Сканировать QR-код</string>
+    <string name="ps_no_camera_perm">Нет доступа к камере</string>
+    <string name="ps_torch_on">"Фонарик вкл.</string>
+    <string name="ps_torch_off">Фонарик выкл.</string>
+    <string name="ps_scan_error">Ошибка сканирования</string>
 
 <!-- History -->
+    <!-- screens -->
+    <string name="ps_history">История</string>
+    <string name="ps_filter">Фильтр</string>
+
     <string name="ps_history_not_found">История платежей не найдена</string>
     <string name="ps_category">Категория</string>
     <string name="ps_period">Период</string>
@@ -31,22 +66,84 @@
     <string name="ps_week">Неделя</string>
     <string name="ps_month">Месяц</string>
     <string name="ps_year">Год</string>
+    <string name="ps_custom_period">Указать свой период</string>
+    <string name="ps_select_period">Выберите период</string>
+    <string name="ps_history_tax_title">Оплата налога</string>
+    <string name="ps_history_fine_title">Оплата штрафа ГИБДД</string>
+    <string name="ps_uid_tax_payment_done_url">android-app://ru.russianpost.payments/uid_tax_payment_done_fragment</string>
+    <string name="ps_tax_payment_done_url">android-app://ru.russianpost.payments/tax_payment_done_fragment</string>
+    <string name="ps_fine_payment_done_url">android-app://ru.russianpost.payments/fine_payment_done_fragment</string>
+
+<!-- Card payment -->
+    <!-- screens -->
+    <string name="ps_confirmation_title">Бланк денежного почтового перевода</string>
+    <string name="ps_payment_card_title">Оплата картой</string>
+    <string name="ps_view_check_title">Чек</string>
+
+    <string name="ps_another_card">Другой картой</string>
+
+    <!-- ESIA authorization -->
+    <string name="ps_auth_text">Для совершения платежа необходимо авторизоваться через Госуслуги</string>
+    <string name="ps_auth_desc">Авторизация через Госуслуги дает доступ к ЕСИА (Единая система идентификации  и аутентификации) и предоставляет возможность идентифицировать вас</string>
+
+    <string name="ps_reg_address_title">Адрес регистрации</string>
+    <string name="ps_reg_address_text">Для совершения платежа введите, пожалуйста, адрес регистрации отправителя</string>
+    <string name="ps_reg_address_hint">Введите адрес регистрации</string>
+
+ <!-- Tax Payments -->
+    <!-- screens -->
+<!--    <string name="ps_tax_payments">Оплата налогов</string>-->
+
+<!--    <string name="ps_uid_tax">Оплата налогов по УИН</string>-->
+<!--    <string name="ps_tax_details">Оплата налогов по произвольным реквизитам</string>-->
+
+<!-- Uid Tax -->
+    <!-- screens -->
+    <string name="ps_uid_tax_payments">Оплата налогов</string>
+    <string name="ps_uid_tax_search">Оплата налога</string>
+    <string name="ps_uid_taxes">Налоги</string>
+    <string name="ps_uid_tax_details">Оплата налога</string>
+    <string name="ps_uid_tax_requisites">Реквизиты</string>
+    <string name="ps_uid_tax_done">Оплата налога</string>
+
+    <!-- UidTaxMenu -->
+    <string name="ps_uid_tax_search_documents">По ИНН</string>
+    <string name="ps_uid_tax_search_uin">По идентификатору (УИН)</string>
+
+    <!-- UidTaxSearch -->
+    <string name="ps_uid_tax_inn_num">ИНН</string>
+    <string name="ps_uid_tax_uin_num">УИН</string>
+    <string name="ps_uid_tax_num_hint">Введите номер</string>
+    <string name="ps_uid_tax_inn_num_assistive">ИНН - 12 цифр</string>
+    <string name="ps_uid_tax_uin_num_assistive">УИН - 20 или 25 цифр</string>
+
+    <!-- UidTaxes -->
+    <string name="ps_uid_tax_searching">Поиск налогов</string>
+    <string name="ps_uid_tax_not_found">Налоги не найдены</string>
+    <string name="ps_uid_tax_for">За %s</string>
+
+    <!-- UidTaxDetail -->
+    <string name="ps_uid_search">Поиск начисления</string>
+    <string name="ps_uid_auth_need">Для оплаты потребуется авторизация через Госуслуги \nПлатеж учитывается ФНС в течение 10 рабочих дней (пени за данный период не начисляются)</string>
+    <string name="ps_uid">УИН</string>
+
+    <string name="ps_sum">Сумма</string>
+    <string name="ps_tax_payment">Оплата налога по постановлению</string>
+
+    <string name="ps_recipient_bank">Банк получателя</string>
+
+    <!-- UidTax settings -->
+    <string name="ps_inn">ИНН %s</string>
+    <string name="ps_inn_number">Номер ИНН</string>
+    <string name="ps_add_inn">Добавить ИНН</string>
 
 <!-- Tax -->
     <!-- screens -->
-    <string name="ps_main_screen">Платежи и переводы</string>
-    <string name="ps_history">История</string>
-    <string name="ps_filter">Фильтр</string>
-    <string name="ps_tax_details">Оплата налогов</string>
     <string name="ps_tax_recipient_info_title">Получатель</string>
     <string name="ps_tax_payer_info_title">Отправитель</string>
     <string name="ps_tax_payment_info_title">Платеж</string>
-    <string name="ps_tax_payment_confirmation_title">Подтверждение</string>
-    <string name="ps_tax_payment_card_title">Оплата картой</string>
     <string name="ps_tax_payment_done_title">Оплата налога</string>
-    <string name="ps_tax_view_check">Чек</string>
 
-    <!-- Fields-->
     <!-- RecipientInformation -->
     <string name="ps_bank_id_code">БИК</string>
     <string name="ps_bank_id_code_hint">Введите 9 цифр БИК</string>
@@ -61,13 +158,13 @@
     <string name="ps_tax_id_number_recipient_hint">Введите 10 цифр ИНН</string>
     <string name="ps_reason_code">КПП</string>
     <string name="ps_reason_code_hint">Введите 9 цифр КПП</string>
-    <string name="ps_bank_name">Наименование банка</string>
+    <string name="ps_bank_name">Наименование банка получателя</string>
     <string name="ps_correspondent_account">к/с</string>
     <string name="ps_recipient_name">Наименование получателя</string>
 
     <!-- PayerInformation -->
     <string name="ps_tax_id_number_payer">ИНН плательщика</string>
-    <string name="ps_tax_id_number_payer_hint">Введите 10-12 цифр ИНН</string>
+    <string name="ps_tax_id_number_payer_hint">Введите 10–12 цифр ИНН</string>
     <string name="ps_status_payer">Статус плательщика</string>
     <array name="ps_status_payers">
         <item name="individual">13 (физическое лицо, ИП, нотариусы, адвокаты, глава КФХ)</item>
@@ -82,13 +179,10 @@
     <string name="ps_last_name_hint">Введите фамилию полностью</string>
     <string name="ps_address">Адрес плательщика</string>
     <string name="ps_address_hint">Введите адрес плательщика</string>
-    <string name="ps_email">E-mail (для отправки чека)</string>
-<!--???-->
+    <string name="ps_email">E-mail для отправки чека</string>
     <string name="ps_email_hint">Введите ваш e-mail</string>
-    <string name="ps_service_payer_id">Идентификатор плательщика услуги</string>
-    <string name="ps_payment_uid">УИП</string>
-<!--???-->
     <string name="ps_confirm_not_public_official">Подтверждаю, что не являюсь публичным должностным лицом</string>
+    <string name="ps_what_public_official">Что такое публичное должностное лицо?</string>
 
     <!-- PaymentInformation -->
     <string name="ps_payment_basis">Основание платежа</string>
@@ -115,26 +209,27 @@
 
     <!-- PaymentConfirmation -->
     <string name="ps_payment_confirmation">Проверьте бланк почтового денежного перевода и нажмите «Подтвердить»</string>
-    <string name="ps_full_name">ФИО</string>
-    <string name="ps_birth_date">Дата рождения</string>
-    <string name="ps_mobile_phone">Мобильный телефон</string>
-    <string name="ps_citizenship">Гражданство</string>
+    <string name="ps_amount">Сумма перевода</string>
+    <string name="ps_commission">Комиссия</string>
+    <string name="ps_total">Итого к оплате</string>
+    <string name="ps_sender_full_name">ФИО отправителя</string>
+    <string name="ps_sender_address">Адрес отправителя</string>
+    <string name="ps_birth_date">Дата рождения отправителя</string>
+    <string name="ps_mobile_phone">Мобильный телефон отправителя</string>
+    <string name="ps_citizenship">Гражданство отправителя</string>
     <string name="ps_sender_id">Удостоверение личности отправителя</string>
     <string name="ps_series_and_number">Серия и номер</string>
     <string name="ps_issued_by">Кем выдан</string>
     <string name="ps_when_issued">Когда выдан</string>
-    <string name="ps_organization_name">Наименование организации</string>
-    <string name="ps_payment_account">Расчетный счет</string>
-
-    <!-- PaymentCard -->
-    <string name="ps_card_number_hint">Номер карты</string>
-    <string name="ps_valid_thru_hint">MM/ГГ</string>
-    <string name="ps_cvc_hint">CVC</string>
+    <string name="ps_organization_name">Наименование организации получателя</string>
+    <string name="ps_payment_account">Расчетный счет получателя</string>
+    <string name="ps_recipient_bank_id_code">БИК получателя</string>
 
     <!-- PaymentDone -->
     <string name="ps_data_sent">Данные отправлены</string>
     <string name="ps_sum_str">%.2f %s</string>
-    <string name="ps_payment_done">Платеж успешно выполнен</string>
+    <string name="ps_payment_done">Оплата выполнена успешно</string>
+    <string name="ps_payment_done_add">Чек будет отправлен на e-mail</string>
     <string name="ps_view_check">Посмотреть чек</string>
     <string name="ps_save_check">Сохранить чек</string>
     <string name="ps_send_check">Отправить чек</string>
@@ -144,45 +239,39 @@
     <string name="ps_check_saved">Чек сохранен в папку Загрузки</string>
     <string name="ps_paid">Оплачено</string>
 
-    <!-- Errors -->
-    <string name="ps_error_in_form">Имеются ошибки в заполнении полей формы</string>
-    <string name="ps_error_field_empty">Заполните поле</string>
-    <plurals name="ps_error_field_length">
-        <item quantity="one">Введите %d цифру</item>
-        <item quantity="few">Введите %d цифры</item>
-        <item quantity="other">Введите %d цифр</item>
-    </plurals>
-    <string name="ps_error_prefix">Поле должно начинаться с %s</string>
-    <string name="ps_error_value">Введите корректное значение поля. Такого значения не существует.</string>
-    <string name="ps_error_year_tax_period">Неправильный год налогового периода</string>
-    <string name="ps_error_invalid_card_number">Неправильный номер карты</string>
-    <string name="ps_error_invalid_date">Неправильная дата</string>
-    <string name="ps_error_invalid_email">Неправильный адрес электронной почты</string>
-    <string name="ps_error_non_zero">Поле не может быть нулевым</string>
-    <string name="ps_error_check_saved">Ошибка сохранения чека</string>
-
 <!-- Auto fines -->
     <!-- screens -->
-    <string name="ps_auto_fines">Штрафы ГИБДД</string>
+    <string name="ps_fines_menu_title">Штрафы ГИБДД</string>
     <string name="ps_fine_search_title">Поиск штрафов</string>
+    <string name="ps_fine_uin_search_title">Поиск штрафов по УИН</string>
     <string name="ps_fines_title">Штрафы</string>
     <string name="ps_fine_title">Штраф</string>
-    <string name="ps_fine_payment_title">Оплата</string>
     <string name="ps_fine_requisites_title">Реквизиты</string>
     <string name="ps_fine_payment_done_title">Оплата штрафа</string>
     <string name="ps_fine_settings">Настройки</string>
     <string name="ps_fine_documents">Мои документы</string>
 
-    <!-- FinesSearch -->
+    <!-- FineMenu -->
+    <string name="ps_fine_search_documents">Поиск по документам</string>
+    <string name="ps_fine_search_uin">Поиск по УИН</string>
+
+    <!-- FineSearch -->
     <string name="ps_vehicle_registration_certificate">СТС</string>
     <string name="ps_vehicle_registration_certificate_hint">Введите номер</string>
     <string name="ps_driver_license">Водительское удостоверение</string>
     <string name="ps_driver_license_hint">Введите номер</string>
-    <string name="ps_fines_not_found">Штрафы не найдены</string>
+    <string name="ps_uin_num">УИН</string>
+    <string name="ps_uin_num_hint">Введите номер</string>
+    <string name="ps_uin_num_assistive">УИН - 20 или 25 цифр</string>
     <string name="ps_documents_empty">Добавьте СТС или ВУ в разделе \"Мои документы\" чтобы узнавать о штрафах </string>
     <string name="ps_save_documents">Сохранить документы</string>
 
+    <!-- Fines -->
+    <string name="ps_fine_search">Поиск штрафов</string>
+    <string name="ps_fines_not_found">Штрафы не найдены</string>
+
     <!-- FineDetail -->
+    <string name="ps_auth_need">Для оплаты потребуется авторизация через Госуслуги</string>
     <string name="ps_violation">Правонарушение</string>
     <string name="ps_fine_date">Дата и время нарушения</string>
     <string name="ps_fine_place">Место нарушения</string>
@@ -190,29 +279,20 @@
     <string name="ps_sum_payment">Сумма к оплате</string>
     <string name="ps_show_details">Показать реквизиты</string>
     <string name="ps_doc_date">Дата документа</string>
-    <string name="ps_discounted_amount">Сумма штрафа со скидкой</string>
-    <string name="ps_commission">Комиссия</string>
-    <string name="ps_total">Итого</string>
     <string name="ps_documents">Документы</string>
     <string name="ps_my_documents">Мои документы</string>
+    <string name="ps_offer_agree">Продолжая оформление заказа, я соглашаюсь</string>
+    <string name="ps_offer">с офертой</string>
 
     <!-- Fine requisites -->
-    <string name="ps_fine_details">Данные о штрафе</string>
     <string name="ps_accrual_amount">Сумма начисления</string>
+    <string name="ps_discount_amount">Сумма штрафа со скидкой</string>
     <string name="ps_discount_message">Сообщение о скидке</string>
-    <string name="ps_money_order_form">Бланк денежного почтового перевода</string>
-    <string name="ps_transfer_sum">Сумма перевода</string>
-    <string name="ps_sender_full_name">ФИО отправителя</string>
-    <string name="ps_sender_address">Адрес отправителя</string>
+    <string name="ps_full_name">ФИО</string>
     <string name="ps_zip_code">Индекс</string>
-    <string name="ps_sender_mobile_phone">Мобильный телефон отправителя</string>
-    <string name="ps_sender_citizenship">Гражданство отправителя</string>
-    <string name="ps_sender_birth_date">Дата рождения отправителя</string>
-    <string name="ps_recipient_organization_name">Наименование организации получателя</string>
-    <string name="ps_recipient_bank_name">Наименование банка получателя</string>
-    <string name="ps_recipient_payment_account">Расчетный счет получателя</string>
-    <string name="ps_recipient_bank_id_code">БИК получателя</string>
     <string name="ps_discount_msg">Скидка %s действует до %s</string>
+    <string name="ps_discount_ended_in">Срок действия скидки истек (%s)</string>
+    <string name="ps_discount_ended">Срок действия скидки истек</string>
 
     <!-- Fine settings -->
     <string name="ps_vrc">СТС %s</string>
@@ -227,16 +307,50 @@
     <string name="ps_doc_removed">Документ удален</string>
 
 <!-- Common -->
+    <!-- Errors -->
+    <string name="ps_error_in_form">Имеются ошибки в заполнении полей формы</string>
+    <string name="ps_error_field_empty">Заполните поле</string>
+    <plurals name="ps_error_field_length">
+        <item quantity="one">Введите %d цифру</item>
+        <item quantity="few">Введите %d цифры</item>
+        <item quantity="other">Введите %d цифр</item>
+    </plurals>
+    <string name="ps_error_field_lengths">Введите правильное количество цифр</string>
+    <string name="ps_error_prefix">Поле должно начинаться с %s</string>
+    <string name="ps_error_value">Введите корректное значение поля. Такого значения не существует.</string>
+    <string name="ps_error_year_tax_period">Неправильный год налогового периода</string>
+    <string name="ps_error_invalid_card_number">Неправильный номер карты</string>
+    <string name="ps_error_invalid_date">Неправильная дата</string>
+    <string name="ps_error_invalid_email">Неправильный адрес электронной почты</string>
+    <string name="ps_error_non_zero">Поле не может быть нулевым</string>
+    <string name="ps_error_check_saved">Ошибка сохранения чека</string>
+
     <!-- internal errors-->
     <string name="ps_error_layout_id">Указан некорректный layoutRes</string>
     <string name="ps_error_get_download_dir">нет доступа к папке Загрузки</string>
     <string name="ps_error_sharing">Внутренняя ошибка доступа к файлу</string>
 
     <!-- dialog -->
+    <string name="ps_error_title">Ошибка</string>
+    <string name="ps_error_no_network">Нет сети</string>
+    <string name="ps_error_authorization_title">Не удалось вас идентифицировать</string>
+    <string name="ps_error_authorization_text">Операция была прервана. Попробуйте авторизоваться еще раз</string>
+    <string name="ps_error_authorization_esia_title">Авторизация в ЕСИА не может быть выполнена</string>
+    <string name="ps_error_authorization_esia_text">Попробуйте повторить операцию позже</string>
     <string name="ps_error_payment_title">Платеж не прошел</string>
-    <string name="ps_error_payment_text">Операция была прервана. Попробуйте оплатить ещё раз</string>
+    <string name="ps_error_payment_service_text">Сервис временно недоступен. Попробуйте оплатить ещё раз</string>
+    <string name="ps_error_payment_card_title">Платеж был отклонен по одной из следующих причин</string>
+    <string name="ps_error_payment_card_text">- введены неверные данные банковской карты;\n- введен неверный пароль для подтверждения операции;\n- на вашем счете не хватает средств;\n- ваш банк недоступен для проведения операций или отклонил проведение операции.</string>
     <string name="ps_error_service_unavailable">Сервис временно недоступен</string>
     <string name="ps_error_try_later">Повторите вашу попытку позже</string>
+    <!--suppress CheckTagEmptyBody -->
+    <string name="ps_error_public_official_title"></string>
+    <string name="ps_error_public_official_text">Подтвердите, что не являетесь публичным должностным лицом</string>
     <string name="ps_write_file_permission_title">Разрешение на запись файла</string>
     <string name="ps_write_file_permission_text">Необходимо дать программе разрешение на запись файла.</string>
+
+    <string name="ps_error_scan_title">Ошибка сканирования</string>
+    <string name="ps_error_scan_text">Программа не смогла распознать QR код.\nПопробуйте еще раз.\nВозможно данный платеж пока не поддерживается программой</string>
+
+    <string name="ps_image_description">Отображение картинки на экране</string>
 </resources>

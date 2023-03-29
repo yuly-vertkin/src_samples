@@ -15,6 +15,7 @@ import androidx.databinding.ViewDataBinding
 import ru.russianpost.payments.R
 import ru.russianpost.payments.base.ui.BaseFragment
 import ru.russianpost.payments.base.ui.SimpleDialog
+import ru.russianpost.payments.base.ui.SimpleDialogParams
 import ru.russianpost.payments.base.ui.WRITE_EXTERNAL_STORAGE_PERMISSION
 import ru.russianpost.payments.tools.SnackbarParams
 import ru.russianpost.payments.tools.showSnackbar
@@ -39,7 +40,7 @@ internal abstract class PaymentDoneFragment<Binding : ViewDataBinding, WM: Payme
         return result
     }
 
-    fun getWriteExternalStoragePermission() {
+    private fun getWriteExternalStoragePermission() {
         when {
             ContextCompat.checkSelfPermission(requireContext().applicationContext, WRITE_EXTERNAL_STORAGE_PERMISSION) ==
             PackageManager.PERMISSION_GRANTED -> onRequestPermission(true)
@@ -52,13 +53,15 @@ internal abstract class PaymentDoneFragment<Binding : ViewDataBinding, WM: Payme
     }
 
     private fun onPermissionRationale() {
-        SimpleDialog.show( this,
-            titleId = R.string.ps_write_file_permission_title,
-            textId = R.string.ps_write_file_permission_text,
+        SimpleDialog.show( this, SimpleDialogParams(
+            title = getString(R.string.ps_write_file_permission_title),
+            text = getString(R.string.ps_write_file_permission_text),
+            ok = getString(R.string.ps_ok_button),
+            cancel = getString(R.string.ps_cancel_button),
             onCancelClick = { onRequestPermission(false) }
         ) {
             requestPermissionLauncher.launch(WRITE_EXTERNAL_STORAGE_PERMISSION)
-        }
+        })
     }
 
     private fun onRequestPermission(isGranted: Boolean) {
@@ -68,13 +71,13 @@ internal abstract class PaymentDoneFragment<Binding : ViewDataBinding, WM: Payme
         }
     }
 
-    fun shareAction(appPath: String) {
+    private fun shareAction(appPath: String) {
         val appFile = File(appPath)
 
         val fileUri: Uri = try {
             FileProvider.getUriForFile(
                 requireContext(),
-                requireContext().packageName + ".provider",
+                requireContext().packageName + ".payments.provider",
                 appFile)
         } catch (e: IllegalArgumentException) {
             requireView().showSnackbar(SnackbarParams(R.string.ps_error_sharing))

@@ -13,14 +13,17 @@
         android:id="@+id/item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:background="@{fv.backgroundRes}"
         app:layout_marginHorizontal="@{fv.horizontalMarginRes}"
-        app:layout_marginVertical="@{fv.verticalMarginRes}" >
+        app:layout_marginVertical="@{fv.verticalMarginRes}"
+        android:onClick="@{() -> fv.onClick()}" >
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text"
             style="@style/TextView.RussianPost.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="@{fv.gravity}"
             android:text="@{fv.text}"
             android:textColor="@{fv.textColor}"
             android:textSize="@{fv.textSize}"

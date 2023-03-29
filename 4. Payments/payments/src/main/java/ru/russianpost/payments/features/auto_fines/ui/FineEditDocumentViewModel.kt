@@ -2,36 +2,43 @@ package ru.russianpost.payments.features.auto_fines.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import ru.russianpost.mobileapp.widget.Snackbar
+import ru.russianpost.payments.AutoFinesNavGraphDirections
 import ru.russianpost.payments.R
-import ru.russianpost.payments.base.domain.NumberOrEmptyFieldValidator
+import ru.russianpost.payments.base.di.AssistedSavedStateViewModelFactory
+import ru.russianpost.payments.base.domain.BaseInputFieldValidator
 import ru.russianpost.payments.base.domain.TemplateFieldFormatter
 import ru.russianpost.payments.base.ui.*
 import ru.russianpost.payments.entities.AppContextProvider
 import ru.russianpost.payments.entities.auto_fines.AutoFineEditDocumentParam
 import ru.russianpost.payments.entities.auto_fines.AutoFineType
-import ru.russianpost.payments.features.auto_fines.domain.AutoFinesRepository
+import ru.russianpost.payments.features.charges.domain.ChargesRepository
 import ru.russianpost.payments.tools.SnackbarParams
-import javax.inject.Inject
 
 
 /**
  * ViewModel редактирования документа для поиска штрафов
  */
-@HiltViewModel
-internal class FineEditDocumentViewModel @Inject constructor(
-    private val repository: AutoFinesRepository,
-    private val savedStateHandle: SavedStateHandle,
+internal class FineEditDocumentViewModel @AssistedInject constructor(
+    @Assisted private val savedStateHandle: SavedStateHandle,
+    private val repository: ChargesRepository,
     appContextProvider: AppContextProvider,
-) : BaseViewModel(appContextProvider) {
+) : BaseMenuViewModel(appContextProvider) {
     private var param: AutoFineEditDocumentParam? = null
 
-    override fun onCreateView() {
-        super.onCreateView()
+    @AssistedFactory
+    interface Factory : AssistedSavedStateViewModelFactory<FineEditDocumentViewModel> {
+        override fun create(savedStateHandle: SavedStateHandle): FineEditDocumentViewModel
+    }
+
+    override fun onCreate() {
+        super.onCreate()
 
         param = savedStateHandle.get<AutoFineEditDocumentParam>(FRAGMENT_PARAMS_NAME)
-        val autoFineData = repository.getData()
+        val chargesData = repository.getData()
 
         with(context.resources) {
             title.value = when (param?.type) {
@@ -39,82 +46,105 @@ internal class FineEditDocumentViewModel @Inject constructor(
                 else -> getString(R.string.ps_dl, param?.document.orEmpty())
             }
 
-            autoFineData.let {
-                addField(
-                    when (param?.type) {
-                        AutoFineType.VRC -> InputFieldValue(
-                            id = R.id.ps_doc_number,
-                            title = getString(R.string.ps_vrc_number),
-                            text = MutableLiveData(param?.document),
-                            hint = getString(R.string.ps_vehicle_registration_certificate_hint),
-                            formatter = TemplateFieldFormatter(AUTO_DOCUMENTS_TEMPLATE),
-                            validator = NumberOrEmptyFieldValidator(VRC_LENGTH),
-                            endDrawableRes = R.drawable.ic24_sign_question,
-                            onIconClickAction = ::showAdvice,
-                            data = VRC_ADVICE,
-                        )
-                        else -> InputFieldValue(
-                            id = R.id.ps_doc_number,
-                            title = getString(R.string.ps_dl_number),
-                            text = MutableLiveData(param?.document.orEmpty()),
-                            hint = getString(R.string.ps_driver_license_hint),
-                            formatter = TemplateFieldFormatter(AUTO_DOCUMENTS_TEMPLATE),
-                            validator = NumberOrEmptyFieldValidator(DL_LENGTH),
-                            endDrawableRes = R.drawable.ic24_sign_question,
-                            onIconClickAction = ::showAdvice,
-                            data = DL_ADVICE,
-                        )
-                    }
-                )
-                btnLabel.value = getString(R.string.ps_save)
-            }
+            addField(
+                when (param?.type) {
+                    AutoFineType.VRC -> InputFieldValue(
+                        id = R.id.ps_doc_number,
+                        title = getString(R.string.ps_vrc_number),
+                        text = MutableLiveData(param?.document),
+                        hint = getString(R.string.ps_vehicle_registration_certificate_hint),
+                        inputType = INPUT_TYPE_TEXT,
+                        formatter = TemplateFieldFormatter(AUTO_DOCUMENTS_TEMPLATE),
+                        validator = BaseInputFieldValidator(VRC_LENGTH),
+                        endDrawableRes = R.drawable.ic24_sign_question,
+                        endDrawableColorRes = R.color.grayscale_stone,
+                        onIconClickAction = ::showAdvice,
+                        data = VRC_ADVICE,
+                    )
+                    else -> InputFieldValue(
+                        id = R.id.ps_doc_number,
+                        title = getString(R.string.ps_dl_number),
+                        text = MutableLiveData(param?.document.orEmpty()),
+                        hint = getString(R.string.ps_driver_license_hint),
+                        formatter = TemplateFieldFormatter(AUTO_DOCUMENTS_TEMPLATE),
+                        validator = BaseInputFieldValidator(DL_LENGTH),
+                        endDrawableRes = R.drawable.ic24_sign_question,
+                        endDrawableColorRes = R.color.grayscale_stone,
+                        onIconClickAction = ::showAdvice,
+                        data = DL_ADVICE,
+                    )
+                }
+            )
+
+            addField(
+                ButtonFieldValue(
+                    text = MutableLiveData(getString(R.string.ps_save)),
+                    horizontalMarginRes = R.dimen.ps_horizontal_margin,
+                    action = ::onButtonClick,
+                ),
+                isMainFields = false
+            )
         }
     }
 
     private fun showAdvice(data: Any?) {
-        action.value = FineSearchFragmentDirections.toAdviceAction((data as? String).orEmpty())
+        action.value = AutoFinesNavGraphDirections.toAdviceAction((data as? String).orEmpty())
     }
 
-    fun onActionDelete() {
+    /** menu delete */
+    override fun onMenuItem1() {
+        with(context.resources) {
+            showDialog.value = SimpleDialogParams(
+                title = getString(R.string.ps_remove_doc_title),
+                text = getString(R.string.ps_remove_doc_text),
+                ok = getString(R.string.ps_ok_button),
+                onOkClick = ::deleteDocument,
+            )
+        }
+        dismissDialog.value = false
+    }
+
+    private fun deleteDocument() {
         val value = param?.document.orEmpty()
 
-        var autoFineData = repository.getData()
-        autoFineData = repository.getData().copy(
-            vehicleRegistrationCertificates = removeValue(autoFineData.vehicleRegistrationCertificates, value),
-            driverLicenses = removeValue(autoFineData.driverLicenses, value),
+        var chargesData = repository.getData()
+        chargesData = chargesData.copy(
+            updateDocuments = true,
+            vehicleRegistrationCertificates = removeValue(chargesData.vehicleRegistrationCertificates, value),
+            driverLicenses = removeValue(chargesData.driverLicenses, value),
         )
-        repository.saveData(autoFineData)
+        repository.saveData(chargesData)
 
         showSnackbar.value = SnackbarParams(R.string.ps_doc_removed)
-
         actionBack.value = true
     }
 
-    override fun onButtonClick() {
+    private fun onButtonClick(data: Any?) {
         if (!validateAll(context.resources)) {
-            showSnackbar.value = SnackbarParams(R.string.ps_error_in_form, Snackbar.Style.ERROR)
+            showSnackbar.value = SnackbarParams(R.string.ps_error_in_form, style = Snackbar.Style.ERROR)
             return
         }
 
         val oldValue = param?.document.orEmpty()
         val newValue = getFieldText(R.id.ps_doc_number).replace(" ", "")
 
-        var autoFineData = repository.getData()
-        autoFineData = repository.getData().copy(
-            vehicleRegistrationCertificates = replaceValue(autoFineData.vehicleRegistrationCertificates, oldValue, newValue),
-            driverLicenses = replaceValue(autoFineData.driverLicenses, oldValue, newValue),
+        var chargesData = repository.getData()
+        chargesData = chargesData.copy(
+            updateDocuments = oldValue != newValue,
+            vehicleRegistrationCertificates = replaceValue(chargesData.vehicleRegistrationCertificates, oldValue, newValue),
+            driverLicenses = replaceValue(chargesData.driverLicenses, oldValue, newValue),
         )
 
-        repository.saveData(autoFineData)
+        repository.saveData(chargesData)
 
         actionBack.value = true
     }
 
-    private fun replaceValue(docList: List<String>?, oldValue: String, newValue: String) =
-        docList?.map {
-            if(it == oldValue) newValue else it
-        }
+    private fun replaceValue(documents: Set<String>?, oldValue: String, newValue: String) : Set<String>? =
+        documents?.map {
+            if (it == oldValue) newValue else it
+        }?.toSet()
 
-    private fun removeValue(docList: List<String>?, value: String) =
-        docList?.filter { it != value }
+    private fun removeValue(documents: Set<String>?, value: String) : Set<String>? =
+        documents?.filter { it != value }?.toSet()
 }

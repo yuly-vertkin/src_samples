@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package ru.russianpost.payments.base.databinding
 
 import android.annotation.SuppressLint
@@ -6,12 +8,13 @@ import android.graphics.drawable.Drawable
 import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ImageView
+import android.view.inputmethod.EditorInfo
+import android.webkit.WebView
+import android.widget.*
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
@@ -21,12 +24,11 @@ import androidx.databinding.InverseBindingListener
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import ru.russianpost.mobileapp.widget.CellView
-import ru.russianpost.mobileapp.widget.CompoundButtonView
-import ru.russianpost.mobileapp.widget.ExtendedButtonView
-import ru.russianpost.mobileapp.widget.InputView
+import coil.request.ImageRequest
+import ru.russianpost.mobileapp.widget.*
+import ru.russianpost.payments.R
 import ru.russianpost.payments.base.ui.*
+import ru.russianpost.payments.data.network.getCoilImageLoader
 import ru.russianpost.payments.tools.CustomSpinnerAdapter
 
 @BindingAdapter("adapter")
@@ -41,7 +43,7 @@ internal fun bindRecyclerView(recyclerView: RecyclerView, data: List<BaseFieldVa
 
 @BindingAdapter("isVisible")
 internal fun viewVisibility(view: View, isVisible: Boolean) {
-    view.visibility = if(isVisible) View.VISIBLE else View.GONE
+    view.visibility = if (isVisible) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("enabled")
@@ -57,6 +59,12 @@ internal fun setButtonLabel(view: ExtendedButtonView, label: String?) {
 @BindingAdapter("is_progress")
 internal fun setButtonInProgress(view: ExtendedButtonView, isProgress: Boolean) {
     view.setProgress(isProgress)
+}
+
+@BindingAdapter("design_button_icon")
+internal fun setButtonEndDrawable(view: ExtendedButtonView, @DrawableRes resId: Int) {
+    view.setIconResource(resId)
+    view.setIconTint(null)
 }
 
 @BindingAdapter(value = ["design_text", "fv"], requireAll = false)
@@ -99,7 +107,7 @@ internal fun getInputValue(view: InputView) : String {
 
 @BindingAdapter("app:design_textAttrChanged")
 internal fun setInputListeners(view: InputView, attrChange: InverseBindingListener) {
-    view.inputView.addTextChangedListener { _ ->
+    view.inputView.addTextChangedListener {
         attrChange.onChange()
     }
     view.inputView.setOnFocusChangeListener { _, _ ->
@@ -132,13 +140,36 @@ internal fun setEndDrawable(view: InputView, @DrawableRes resId: Int) {
     view.setIconResource(resId)
 }
 
+@BindingAdapter("design_iconColor")
+internal fun setEndDrawableTint(view: InputView, @ColorRes color: Int) {
+    val colorState = if (color != 0) ContextCompat.getColorStateList(view.context, color) else null
+    colorState?.let { view.setIconTint(it) }
+}
+
 @BindingAdapter("inputType")
 internal fun setInputType(view: InputView, type: String?) {
-    view.inputView.inputType = when(type) {
+    view.inputView.inputType = getInputType(type)
+}
+
+@BindingAdapter("inputType")
+internal fun setInputType(view: TextView, type: String?) {
+    view.inputType = getInputType(type)
+}
+
+private fun getInputType(type: String?) =
+    when(type) {
         INPUT_TYPE_NUMBER -> InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
         INPUT_TYPE_NUMBER_DECIMAL -> InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
         INPUT_TYPE_NUMBER_PASSWORD -> InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
         else -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_NUMBER_VARIATION_NORMAL
+    }
+
+@BindingAdapter("imeOptions")
+internal fun setImeOptions(view: InputView, imeOptions: String?) {
+    view.inputView.imeOptions = when(imeOptions) {
+        IME_ACTION_NEXT -> EditorInfo.IME_ACTION_NEXT
+        IME_ACTION_DONE -> EditorInfo.IME_ACTION_DONE
+        else -> EditorInfo.IME_ACTION_NONE
     }
 }
 
@@ -150,6 +181,7 @@ internal fun setSpinnerAdapter(view: AppCompatSpinner, adapter: ArrayAdapter<Str
 @BindingAdapter(value = ["listData", "enables"], requireAll = false)
 internal fun bindSpinner(view: AppCompatSpinner, data: List<String>?, enables: List<Boolean>? = null) {
     if (data != null) {
+        (view.adapter as ArrayAdapter<String>).clear()
         (view.adapter as ArrayAdapter<String>).addAll(data)
         (view.adapter as? CustomSpinnerAdapter)?.enables = enables
     }
@@ -179,6 +211,14 @@ internal fun setSpinnerListeners(view: AppCompatSpinner, attrChange: InverseBind
     }
 }
 
+@BindingAdapter("listData")
+internal fun bindAutoCompleteText(view: AppCompatAutoCompleteTextView, data: List<String>?) {
+    if (data != null) {
+        val adapter = ArrayAdapter<String>(view.context, R.layout.ps_spinner_dropdown_item, data)
+        view.setAdapter(adapter)
+    }
+}
+
 @BindingAdapter(value = ["layout_marginHorizontal", "layout_marginVertical", "layout_marginStart", "layout_height"], requireAll = false)
 internal fun setLayoutMargins(view: View, @DimenRes hmRes: Int, @DimenRes vmRes: Int, @DimenRes smRes: Int, @DimenRes hRes: Int) {
     if (hmRes != 0 || vmRes != 0 || smRes != 0 || hRes != 0) {
@@ -194,13 +234,19 @@ internal fun setLayoutMargins(view: View, @DimenRes hmRes: Int, @DimenRes vmRes:
 }
 
 @BindingAdapter("design_title")
-internal fun setCellTitle(view: CellView, text: String?) {
+internal fun setCellTitle(view: BaseCellView, text: String?) {
     view.setTitle(text)
 }
 
 @BindingAdapter("design_subtitle")
-internal fun setCellSubtitle(view: CellView, text: String?) {
+internal fun setCellSubtitle(view: BaseCellView, text: String?) {
     view.setSubtitle(text)
+}
+
+@BindingAdapter("design_titleColor")
+internal fun setCellTitleColor(view: CellView, @ColorRes color: Int) {
+    val colorState = if (color != 0) ContextCompat.getColorStateList(view.context, color) else null
+    colorState?.let { view.setTitleColor(it) }
 }
 
 @BindingAdapter(value = ["design_drawableStart", "design_drawableEnd"], requireAll = false)
@@ -214,13 +260,33 @@ internal fun setCellDrawableTint(view: CellView, @ColorRes startColor: Int, @Col
     if (startColor != 0)
         view.setDrawableStartTint(ColorStateList.valueOf(ContextCompat.getColor(view.context, startColor)))
     if (endColor != 0)
-        view.setDrawableStartTint(ColorStateList.valueOf(ContextCompat.getColor(view.context, endColor)))
+        view.setDrawableEndTint(ColorStateList.valueOf(ContextCompat.getColor(view.context, endColor)))
 }
 
-
 @BindingAdapter("background")
-internal fun setCellBackground(view: CellView, @DrawableRes backgroundRes: Int) {
+internal fun setViewBackground(view: View, @DrawableRes backgroundRes: Int) {
     view.setBackgroundResource(backgroundRes)
+}
+
+@BindingAdapter("design_empty_icon")
+internal fun setEmptyDrawable(view: EmptyView, @DrawableRes drawableRes: Int) {
+    view.setIconResource(drawableRes)
+}
+
+@BindingAdapter("design_empty_iconTint")
+internal fun setEmptyDrawableTint(view: EmptyView, @ColorRes color: Int) {
+    if (color != 0)
+        view.setIconTintResource(color)
+}
+
+@BindingAdapter("design_empty_actionText")
+internal fun setActionText(view: EmptyView, text: String?) {
+    view.setActionText(text)
+}
+
+@BindingAdapter("design_empty_actionClick")
+internal fun setActionClickListener(view: EmptyView, l: View.OnClickListener?) {
+    view.setOnActionClickListener(l)
 }
 
 @BindingAdapter("design_title")
@@ -228,9 +294,10 @@ internal fun setCheckboxText(view: CompoundButtonView, text: String?) {
     view.setTitle(text)
 }
 
-@BindingAdapter("design_checked")
-internal fun setCheckboxSelectedValue(view: CompoundButtonView, value: Boolean) {
+@BindingAdapter(value = ["design_checked", "fv"], requireAll = false)
+internal fun setCheckboxSelectedValue(view: CompoundButtonView, value: Boolean, fv: CheckboxFieldValue?) {
     view.isChecked = value
+    fv?.action?.invoke(fv.data)
 }
 
 @InverseBindingAdapter(attribute = "design_checked")
@@ -249,7 +316,22 @@ internal fun setCheckboxListeners(view: CompoundButtonView, attrChange: InverseB
 
 @BindingAdapter("img")
 internal fun setImage(view: ImageView, value: String?) {
-    view.load(value)
+//    view.load(value)
+    val request = ImageRequest.Builder(view.context)
+        .data(value)
+        .placeholder(null) //TODO положи сюда заглушку на время загрузки
+        .error(null) //TODO положи сюда заглушку для сбоя
+        .target(onStart = { placeholderDrawable ->
+            view.setImageDrawable(placeholderDrawable)
+        }, onSuccess = { resultDrawable ->
+            // Handle the successful result.
+            view.setImageDrawable(resultDrawable)
+        }, onError = { errorDrawable ->
+            view.setImageDrawable(errorDrawable)
+        })
+        .build()
+
+    getCoilImageLoader(view.context).enqueue(request)
 }
 
 @BindingAdapter("divider")
@@ -259,4 +341,9 @@ internal fun setRecyclerViewDivider(recyclerView: RecyclerView, drawable: Drawab
     val itemDecoration = DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL)
     itemDecoration.setDrawable(drawable)
     recyclerView.addItemDecoration(itemDecoration)
+}
+
+@BindingAdapter("url")
+internal fun loadUrl(view: WebView, url: String?) {
+    url?.let { view.loadUrl(url) }
 }

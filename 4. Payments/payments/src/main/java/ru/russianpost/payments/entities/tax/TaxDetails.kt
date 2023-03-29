@@ -1,45 +1,46 @@
 package ru.russianpost.payments.entities.tax
 
+import ru.russianpost.payments.entities.BaseResponse
+
 /** Реквизиты платежа */
 internal data class TaxDetails (
-    var id: String = "",
+    var id: String? = null,
     //    RecipientInformation
-    val recipientBankIdentificationCode: String = "",
-    val accountNumber: String = "",
-    val budgetClassificationCode: String = "",
-    val oktmo: String = "",
-    val recipientIndividualTaxNumber: String = "",
-    val recipientRegistrationReasonCode: String = "",
-    val bankName: String = "",
-    val correspondentAccount: String = "",
-    val recipientName: String = "",
+    val recipientBankIdentificationCode: String? = null,
+    val accountNumber: String? = null,
+    val budgetClassificationCode: String? = null,
+    val oktmo: String? = null,
+    val recipientIndividualTaxNumber: String? = null,
+    val recipientRegistrationReasonCode: String? = null,
+    val bankName: String? = null,
+    val correspondentAccount: String? = null,
+    val recipientName: String? = null,
     //    PayerInformation
-    val payerIndividualTaxNumber: String = "",
-    val payerStatus: String = "",
-    val firstName: String = "",
-    val patronymic: String = "",
-    val lastName: String = "",
-    val payerAddress: String = "",
+    val payerIndividualTaxNumber: String? = null,
+    val payerStatus: String? = null,
+    val firstName: String? = null,
+    val patronymic: String? = null,
+    val lastName: String? = null,
+    val payerAddress: String? = null,
 // not used now
-//    val email: String = "",
-//    val servicePayerIdentifier: String = "0",
-//    val uniquePaymentIdentifier: String = "0",
-    val notPublicOfficial: Boolean = true,
+//    val email: String? = null,
+//    val servicePayerIdentifier: String? = null,
+//    val uniquePaymentIdentifier: String? = null,
     //    PaymentInformation
-    val paymentBasis: String = "",
-    val taxPeriod: String = "",
-    val paymentAccrualUniqueIdentifier: String = "",
-    val paymentPurpose: String = "",
-    val sum: Float = 0f,
+    val paymentBasis: String? = null,
+    val taxPeriod: String? = null,
+    val paymentAccrualUniqueIdentifier: String? = null,
+    val paymentPurpose: String? = null,
+    val sum: Float? = null,
     //    PaymentConfirmation
-    val birthDate: String = "",
-    val mobilePhone: String = "",
-    val citizenship: String = "",
-    val passportSeriesAndNumber: String = "",
-    val passportIssuedBy: String = "",
-    val passportWhenIssued: String = "",
-    val organizationName: String = "",
-)
+    val birthDate: String? = null,
+    val mobilePhone: String? = null,
+    val citizenship: String? = null,
+    val passportSeriesAndNumber: String? = null,
+    val passportIssuedBy: String? = null,
+    val passportWhenIssued: String? = null,
+    val organizationName: String? = null,
+) : BaseResponse()
 /*
 internal data class TaxDetails (
     var id: String = "",

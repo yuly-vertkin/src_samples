@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -19,7 +18,9 @@
         app:design_text="@={fv.text}"
         app:error_text="@{fv.error}"
         app:design_icon="@{fv.endDrawableRes}"
+        app:design_iconColor="@{fv.endDrawableColorRes}"
         app:inputType="@{fv.inputType}"
+        app:imeOptions="@{fv.imeOptions}"
         app:enabled="@{fv.enabled}"
         app:onIconClickListener="@{() -> fv.onIconClick()}"
         app:fv="@{fv}" />

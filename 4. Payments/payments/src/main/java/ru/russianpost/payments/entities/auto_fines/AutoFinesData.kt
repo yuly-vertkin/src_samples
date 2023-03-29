@@ -12,14 +12,6 @@ enum class AutoFineType {
 @Parcelize
 data class AutoFineEditDocumentParam (
     val type: AutoFineType,
-    val document: String = "",
-) : Parcelable
-
-@Parcelize
-data class AutoFinesData (
-    val vehicleRegistrationCertificates: List<String>? = null, //"7844478122",
-    val driverLicenses: List<String>? = null, //"8221168066",
-    val saveDocuments: Boolean = true,
-    val currentFineId: String = "",
+    val document: String?,
 ) : Parcelable
 

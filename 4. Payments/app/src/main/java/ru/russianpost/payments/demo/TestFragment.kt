@@ -17,7 +17,7 @@ class TestFragment : Fragment(R.layout.fragment_test) {
             parentFragmentManager.commit {
                 setReorderingAllowed(true)
                 add<PaymentFragment>(R.id.fragment_container_view)
-//                addToBackStack(null)
+                addToBackStack(null)
             }
         }
 

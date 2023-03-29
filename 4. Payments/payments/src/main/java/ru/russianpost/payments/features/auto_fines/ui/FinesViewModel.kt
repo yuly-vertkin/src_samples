@@ -7,65 +7,120 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.core.text.strikeThrough
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import ru.russianpost.payments.R
+import ru.russianpost.payments.base.di.AssistedSavedStateViewModelFactory
 import ru.russianpost.payments.base.ui.*
 import ru.russianpost.payments.entities.AppContextProvider
-import ru.russianpost.payments.entities.Response
-import ru.russianpost.payments.entities.auto_fines.AutoFine
-import ru.russianpost.payments.entities.auto_fines.AutoFinesData
-import ru.russianpost.payments.features.auto_fines.domain.AutoFinesRepository
+import ru.russianpost.payments.entities.ResponseException
+import ru.russianpost.payments.entities.charges.Charge
+import ru.russianpost.payments.entities.charges.ChargesData
+import ru.russianpost.payments.features.charges.domain.ChargesRepository
 import ru.russianpost.payments.tools.*
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
 /**
  * ViewModel списка штрафов по СТС и ВУ
  */
-@HiltViewModel
-internal class FinesViewModel @Inject constructor(
-    private val repository: AutoFinesRepository,
-    private val savedStateHandle: SavedStateHandle,
+internal class FinesViewModel @AssistedInject constructor(
+    @Assisted private val savedStateHandle: SavedStateHandle,
+    private val repository: ChargesRepository,
     appContextProvider: AppContextProvider,
-) : BaseViewModel(appContextProvider) {
-    private lateinit var autoFineData: AutoFinesData
+) : BaseMenuViewModel(appContextProvider) {
     @ColorInt private var discountColor: Int = 0
+
+    @AssistedFactory
+    interface Factory : AssistedSavedStateViewModelFactory<FinesViewModel> {
+        override fun create(savedStateHandle: SavedStateHandle): FinesViewModel
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        discountColor = ContextCompat.getColor(context, R.color.common_jardin)
+
+        showSearchString()
+        // вызывается здесь, чтобы не вызываться повторно в onCreateView при возврате на экран
+        makeNetworkCall()
+    }
 
     override fun onCreateView() {
         super.onCreateView()
 
-        autoFineData = savedStateHandle.get<AutoFinesData>(FRAGMENT_PARAMS_NAME) ?: repository.getData()
-        savedStateHandle.remove<AutoFinesData>(FRAGMENT_PARAMS_NAME)
+        var chargesData = repository.getData()
+        // вызывается только если мы изменили документы
+        if (chargesData.updateDocuments) {
+            clearFields()
+            showSearchString()
+            makeNetworkCall()
 
-        discountColor = ContextCompat.getColor(context, R.color.common_jardin)
-        isBtnVisible.value = false
-
-        viewModelScope.launch {
-            repository.getAutoFines(autoFineData).collect {
-                isLoading.value = it is Response.Loading
-                when(it) {
-                    is Response.Success -> addFines(it.data)
-                    is Response.Error ->  {
-                        addFines(emptyList())
-                        if (!isDocumentsEmpty())
-                            showDialog.value = DialogTypes.SERVICE_UNAVAILABLE
-                    }
-                    else -> {}
-                }
-            }
+            chargesData = chargesData.copy(
+                updateDocuments = false
+            )
+            repository.saveData(chargesData)
         }
     }
 
-    private fun addFines(fines: List<AutoFine>) {
-        if(fines.isEmpty()) {
+    private fun makeNetworkCall() {
+        var chargesData = repository.getData()
+        if (isDocumentsEmpty()) {
+            if (chargesData.updateDocuments) { // пользователь удалил все документы
+                addCharges(emptyList())
+                return
+            } else { // пользователь решил не сохранять введенные документы
+                chargesData = savedStateHandle.get<ChargesData>(FRAGMENT_PARAMS_NAME) ?: repository.getData()
+            }
+        }
+// откомментировать если мы не хотим показывать штрафы для несохраненных документов между переходами по экранам
+// (уход на др. экран и возврат приведут к потере несохраненного документа)
+//        savedStateHandle.remove<ChargesData>(FRAGMENT_PARAMS_NAME)
+
+        // search with only payment fields
+        val data = ChargesData(
+                vehicleRegistrationCertificates = chargesData.vehicleRegistrationCertificates,
+                driverLicenses = chargesData.driverLicenses,
+            )
+        processNetworkCall(
+            action = { repository.getCharges(data) },
+            onSuccess = ::addCharges,
+            onError = {
+                addCharges(emptyList())
+                if (it is ResponseException)
+                    showServerErrorDialog(it.errorCode, it.errorTitle, it.errorMessage)
+                else if (!isDocumentsEmpty())
+                    showServiceUnavailableDialog()
+            },
+        )
+    }
+
+    private fun showSearchString() {
+        with(context.resources) {
+            addField(
+                TextFieldValue(
+                    id = R.id.ps_fines_search,
+                    text = getString(R.string.ps_fine_search),
+                    textColor = ContextCompat.getColor(context, R.color.grayscale_carbon),
+                    textSize = getDimension(R.dimen.ps_text_size_16sp),
+                    horizontalMarginRes = R.dimen.ps_horizontal_margin,
+                    verticalMarginRes = R.dimen.ps_text_vertical_margin,
+                )
+            )
+        }
+    }
+
+    private fun addCharges(charges: List<Charge>) {
+        val chargesData = repository.getData()
+        setVisibility(R.id.ps_fines_search, false)
+
+        if (charges.isEmpty()) {
             with(context.resources) {
                 addField(
                     TextFieldValue(
-                        id = R.id.ps_fines_not_found,
-                        text = if (isDocumentsEmpty()) getString(R.string.ps_documents_empty) else getString(R.string.ps_fines_not_found),
+                        text = if (isDocumentsEmpty() && chargesData.updateDocuments) getString(R.string.ps_documents_empty)
+                               else getString(R.string.ps_fines_not_found),
                         textColor = ContextCompat.getColor(context, R.color.grayscale_carbon),
                         textSize = getDimension(R.dimen.ps_text_size_16sp),
                         horizontalMarginRes = R.dimen.ps_horizontal_margin,
@@ -75,17 +130,16 @@ internal class FinesViewModel @Inject constructor(
             }
         }
 
-        fines.map {
+        charges.map {
             addFields(listOf(
-                AutoFineFieldValue(
+                ChargeFieldValue(
                     violation = it.purpose,
-                    date = getFineDate(it.offenseDate),
+                    date = getChargeDate(it.offenseDate),
                     sum = getSum(it),
-                    details = context.resources.getString(R.string.ps_discount_msg,
-                       "${it.discountFixed} $rubSign",
-                        formatReverseDate(it.discountExpiry)),
+                    details = makeDiscountMessage(it),
+                    isDetailVisible = it.discount != null,
                     data = it,
-                    action = ::onFineClick,
+                    action = ::onChargeClick,
                 ),
                 DividerFieldValue(
                     startMarginRes = R.dimen.ps_horizontal_margin,
@@ -94,20 +148,20 @@ internal class FinesViewModel @Inject constructor(
         }
 
         with(context.resources) {
-            addField(
+            addFields(listOf(
                 CellFieldValue(
                     title = if (isDocumentsEmpty()) getString(R.string.ps_add_documents) else getString(R.string.ps_my_documents),
                     startDrawableRes = if (isDocumentsEmpty()) R.drawable.ic24_action_add else R.drawable.ic24_user_passport,
-                    startDrawableColorRes = R.color.common_xenon,
+                    startDrawableColorRes = R.color.grayscale_stone,
                     action = ::onShowDocuments,
                 ),
-            )
+            ))
         }
     }
 
     private fun isDocumentsEmpty() =
-        autoFineData.vehicleRegistrationCertificates.isNullOrEmpty() &&
-        autoFineData.driverLicenses.isNullOrEmpty()
+        repository.getData().vehicleRegistrationCertificates.isNullOrEmpty() &&
+        repository.getData().driverLicenses.isNullOrEmpty()
 
     private fun onShowDocuments(data: Any?) {
         action.value = if (isDocumentsEmpty())
@@ -116,58 +170,56 @@ internal class FinesViewModel @Inject constructor(
                 FinesFragmentDirections.toFineDocumentsAction()
     }
 
-    private fun getFineDate(dateStr: String) : String {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.getDefault())
-        getDateFromStr(dateStr, inputFormat)?.let {
-            return when {
+    private fun getChargeDate(dateStr: String?) : String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        return getDateFromStr(dateStr, inputFormat)?.let {
+            when {
                 isToday(it.time) -> getTimeFromDate(dateStr)
                 isDaysBefore(it.time, AUTO_FINE_DAYS_BEFORE) -> getDayFromDate(dateStr)
                 else -> formatReverseDate(dateStr)
             }
-        } ?: return ""
+        } ?: ""
     }
 
-    private fun getSum(fine: AutoFine) =
-        if (fine.amountToPay < fine.totalAmount)
-            makeDiscountText(makeSum(fine.amountToPay), makeSum(fine.totalAmount))
-        else makeSum(fine.totalAmount)
+    private fun getSum(charge: Charge) =
+        if (charge.amountToPay < charge.totalAmount)
+            makeSumMessage(makeSum(charge.amountToPay), makeSum(charge.totalAmount))
+        else makeSum(charge.totalAmount)
 
-    private fun makeDiscountText(sumPay: String, sumTotal: String) : Spanned {
+    private fun makeSumMessage(sumPay: String?, sumTotal: String?) : Spanned {
         return buildSpannedString {
-            color(discountColor) {
-                append(sumPay)
+            sumPay?.let {
+                color(discountColor) {
+                    append(sumPay)
+                }
             }
             append(" ")
-            strikeThrough {
-                append(sumTotal)
+            sumTotal?.let {
+                strikeThrough {
+                    append(sumTotal)
+                }
             }
         }
     }
 
-    fun onActionSettings() {
+    private fun makeDiscountMessage(charge: Charge) =
+        charge.discount?.let { context.resources.getString(R.string.ps_discount_msg,
+            makeSum(charge.discount), formatReverseDate(charge.discountExpiry)) } ?: ""
+
+    /** menu settings */
+    override fun onMenuItem1() {
         action.value = FinesFragmentDirections.toFineSettingsAction()
     }
 
-    private fun onFineClick(data: Any?) {
+    private fun onChargeClick(data: Any?) {
         data?.let {
-            val fine = it as AutoFine
+            val charge = it as Charge
+            val chargesData = repository.getData().copy(
+                uin = charge.supplierBillID,
+            )
+            repository.saveData(chargesData)
 
-            viewModelScope.launch {
-                repository.sendFine(fine).collect {
-                    isLoading.value = it is Response.Loading
-                    when(it) {
-                        is Response.Success -> {
-                            autoFineData = repository.getData().copy(
-                                currentFineId = it.data,
-                            )
-                            repository.saveData(autoFineData)
-
-                            action.value = FinesFragmentDirections.toFineAction(fine)
-                        }
-                        else -> {}
-                    }
-                }
-            }
+            action.value = FinesFragmentDirections.toFineAction(charge)
         }
     }
 }

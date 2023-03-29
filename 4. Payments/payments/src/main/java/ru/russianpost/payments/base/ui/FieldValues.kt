@@ -1,6 +1,6 @@
 package ru.russianpost.payments.base.ui
 
-import android.graphics.Color
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -50,12 +50,14 @@ internal abstract class BaseFieldValue(
 internal data class InputFieldValue(
     @IdRes override val id: Int,
     val title: String? = null,
-    val text: MutableLiveData<String> = MutableLiveData(""),
+    val text: MutableLiveData<String?> = MutableLiveData(null),
     var error: MutableLiveData<String> = MutableLiveData(""),
-    val inputType: String = "number",
+    val inputType: String = INPUT_TYPE_NUMBER,
+    val imeOptions: String = IME_ACTION_NEXT,
     val hint: String? = null,
     val assistive: String? = null,
     @DrawableRes val endDrawableRes: Int = 0,
+    @ColorRes val endDrawableColorRes: Int = 0,
     var enabled: Boolean = true,
     val formatter: BaseInputFieldFormatter = BaseInputFieldFormatter(),
     val validator: BaseInputFieldValidator = BaseInputFieldValidator(),
@@ -75,7 +77,8 @@ internal data class InputFieldValue(
 
 internal data class CellFieldValue(
     @IdRes override val id: Int = View.generateViewId(),
-    var title: String? = null,
+    val title: String? = null,
+    @ColorRes val titleColorRes: Int = 0,
     val subtitle: MutableLiveData<String?> = MutableLiveData(null),
     @DrawableRes val backgroundRes: Int = 0,
     @DrawableRes val startDrawableRes: Int = 0,
@@ -116,10 +119,35 @@ internal data class SpinnerFieldValue(
     }
 }
 
+// TODO: понадобится для экранов госпошлин ЗАГС
+//                AutoCompleteTextFieldValue(
+//                    id = R.id.ps_status_payer,
+//                    title = getString(R.string.ps_status_payer),
+//                    inputType = INPUT_TYPE_TEXT,
+//                    threshold = 3,
+//                    items = listOf("1111", "1101", "1110", "2222", "2202", "2220", "3333", "3303", "3330"),
+//                ),
+
+internal data class AutoCompleteTextFieldValue(
+    @IdRes override val id: Int,
+    val title: String? = null,
+    val text: MutableLiveData<String> = MutableLiveData(""),
+    val inputType: String = INPUT_TYPE_NUMBER,
+    val threshold: Int = AUTOCOMPLETE_DEFAULT_THRESOLD,
+    val items: List<String>,
+) : BaseFieldValue(id, ViewType.AUTO_COMPLETE_TEXT) {
+
+    override fun bind(parent: ViewGroup, binding: ViewDataBinding) {
+        (binding as PsItemAutoCompleteTextViewBinding).fv = this
+    }
+}
+
 internal data class CheckboxFieldValue(
     @IdRes override val id: Int,
     val title: String? = null,
     val selected: MutableLiveData<Boolean> = MutableLiveData(false),
+    override var data: Any? = null,
+    val action: ((data: Any?) -> Unit)? = null,
     val isRightCheckbox: Boolean = false,
 ) : BaseFieldValue(id, if (!isRightCheckbox) ViewType.CHECKBOX else ViewType.CHECKBOX_RIGHT) {
 
@@ -134,17 +162,24 @@ internal data class CheckboxFieldValue(
 
 internal data class TextFieldValue(
     @IdRes override val id: Int = View.generateViewId(),
-    val text: String,
-    val rightText: String = "",
-    @ColorInt val textColor: Int = Color.BLACK,
+    val text: CharSequence?,
+    val rightText: MutableLiveData<String?> = MutableLiveData(null),
+    @ColorInt val textColor: Int,
     val textSize: Float,
     @DrawableRes val backgroundRes: Int = 0,
     @DimenRes val horizontalMarginRes: Int = 0,
     @DimenRes val verticalMarginRes: Int = 0,
+    val gravity: Int = Gravity.LEFT,
+    override var data: Any? = null,
+    val action: ((data: Any?) -> Unit)? = null,
 ) : BaseFieldValue(id, ViewType.TEXT) {
 
     override fun bind(parent: ViewGroup, binding: ViewDataBinding) {
         (binding as PsItemTextViewBinding).fv = this
+    }
+
+    fun onClick() {
+        action?.invoke(data)
     }
 }
 
@@ -157,6 +192,9 @@ internal data class ImageFieldValue(
         (binding as PsItemImageViewBinding).fv = this
     }
 }
+
+// we can use divider for making external space between fields:
+// DividerFieldValue( heightRes = R.dimen.ps_zero_height, verticalMarginRes = R.dimen.text_vertical_margin,)
 
 internal data class DividerFieldValue(
     @IdRes override val id: Int = View.generateViewId(),
@@ -171,16 +209,51 @@ internal data class DividerFieldValue(
 }
 
 internal data class ButtonFieldValue(
-    @IdRes override val id: Int,
-    var text: String? = null,
+    @IdRes override val id: Int = View.generateViewId(),
+    val text: MutableLiveData<String?> = MutableLiveData(null),
+    val enabled: MutableLiveData<Boolean> = MutableLiveData(true),
+    val checked: MutableLiveData<Boolean> = MutableLiveData(false),
+    val isProgress: MutableLiveData<Boolean> = MutableLiveData(false),
     @DimenRes val horizontalMarginRes: Int = 0,
     @DimenRes val verticalMarginRes: Int = 0,
     override var data: Any? = null,
     val action: ((data: Any?) -> Unit)? = null,
-) : BaseFieldValue(id, ViewType.BUTTON_TOGGLE) {
+    val endDrawableRes: MutableLiveData<Int> = MutableLiveData(0),
+    val onIconClickAction: ((data: Any?) -> Unit)? = null,
+    val isExtendedButton: Boolean = true,
+) : BaseFieldValue(id, if (isExtendedButton) ViewType.EXTENDED_BUTTON else ViewType.BUTTON_TOGGLE) {
 
     override fun bind(parent: ViewGroup, binding: ViewDataBinding) {
-        (binding as PsItemButtonTogleViewBinding).fv = this
+        if (isExtendedButton)
+            (binding as PsItemExtendedButtonViewBinding).fv = this
+        else
+            (binding as PsItemButtonTogleViewBinding).fv = this
+    }
+
+    fun onClick() {
+        action?.invoke(data)
+    }
+
+    fun onIconClick() {
+        onIconClickAction?.invoke(data)
+    }
+}
+
+internal data class EmptyFieldValue(
+    @IdRes override val id: Int = View.generateViewId(),
+    var title: String? = null,
+    val subtitle: MutableLiveData<String?> = MutableLiveData(null),
+    @DrawableRes val drawableRes: Int = 0,
+    @ColorRes val drawableColorRes: Int = 0,
+    @DimenRes val horizontalMarginRes: Int = 0,
+    @DimenRes val verticalMarginRes: Int = 0,
+    var actionText: String? = null,
+    override var data: Any? = null,
+    val action: ((data: Any?) -> Unit)? = null,
+) : BaseFieldValue(id, ViewType.EMPTY_VIEW) {
+
+    override fun bind(parent: ViewGroup, binding: ViewDataBinding) {
+        (binding as PsItemEmptyViewBinding).fv = this
     }
 
     fun onClick() {
@@ -209,18 +282,19 @@ internal data class ContainerFieldValue(
     }
 }
 
-internal data class AutoFineFieldValue(
+internal data class ChargeFieldValue(
     @IdRes override val id: Int = View.generateViewId(),
-    val violation: String,
+    val violation: String?,
     val date: String,
-    val sum: CharSequence,
+    val sum: CharSequence?,
     val details: String,
+    val isDetailVisible: Boolean = true,
     override var data: Any? = null,
     val action: ((data: Any?) -> Unit)? = null,
 ) : BaseFieldValue(id, ViewType.AUTO_FINE) {
 
     override fun bind(parent: ViewGroup, binding: ViewDataBinding) {
-        (binding as PsItemAutoFineViewBinding).fv = this
+        (binding as PsItemChargeViewBinding).fv = this
     }
 
     fun onClick() {
@@ -230,10 +304,10 @@ internal data class AutoFineFieldValue(
 
 internal data class HistoryFieldValue(
     @IdRes override val id: Int = View.generateViewId(),
-    val title: String,
+    val title: String? = null,
     val date: String,
-    val sum: CharSequence,
-    val details: String,
+    val sum: CharSequence?,
+    val details: String? = null,
     override var data: Any? = null,
     val action: ((data: Any?) -> Unit)? = null,
 ) : BaseFieldValue(id, ViewType.HISTORY) {

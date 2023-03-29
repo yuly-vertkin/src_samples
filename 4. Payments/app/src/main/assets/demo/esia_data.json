@@ -1,0 +1,15 @@
+{
+  "firstName" : "Иван",
+  "middleName" : "Иванович",
+  "lastName" : "Иванов",
+  "birthDate" : "",
+  "passportSeries" : "5665",
+  "passportNumber" : "456788",
+  "passportIssueDate" : "13.12.1986",
+  "passportIssuedBy" : "Отделом ФМС г. Москвы Россия",
+  "passportIssueId" : "780017",
+  "addressRegStr" : "",
+  "addressRegZipCode" : "195257",
+  "mobilephone" : "+7 926 444 44 44",
+  "mobileVrfStu" : "?"
+}

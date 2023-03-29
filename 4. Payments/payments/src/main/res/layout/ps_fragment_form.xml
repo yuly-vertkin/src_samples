@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -19,25 +18,22 @@
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/ps_scroll_margin_top"
             android:layout_marginBottom="@dimen/ps_scroll_margin_bottom"
-            app:adapter="@{vm.rvAdapter}"
+            app:adapter="@{vm.rvMainAdapter}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:listData="@{vm.items}"
+            app:listData="@{vm.mainItems}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/button_view" />
+            app:layout_constraintBottom_toTopOf="@id/rv_bottom" />
 
-        <ru.russianpost.mobileapp.widget.ExtendedButtonView
-            android:id="@+id/button_view"
-            style="@style/ExtendedButtonView.RussianPost.Default"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_bottom"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/ps_horizontal_margin"
             android:layout_marginBottom="@dimen/ps_button_bottom_margin"
-            android:onClick="@{() -> vm.onButtonClick()}"
-            app:isVisible="@{vm.isBtnVisible}"
-            app:design_button_label="@{vm.btnLabel}"
-            app:is_progress="@{vm.isBtnLoading}"
+            app:adapter="@{vm.rvBottomAdapter}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:listData="@{vm.bottomItems}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
@@ -49,7 +45,7 @@
             android:indeterminate="true"
             android:indeterminateTintMode="src_atop"
             android:indeterminateTint="@color/grayscale_stone"
-            app:isVisible="@{vm.isLoading()}"
+            app:isVisible="@{vm.isLoading}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

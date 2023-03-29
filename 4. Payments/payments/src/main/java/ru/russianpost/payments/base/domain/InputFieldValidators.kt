@@ -1,12 +1,9 @@
 package ru.russianpost.payments.base.domain
 
+import android.annotation.SuppressLint
 import android.content.res.Resources
 import ru.russianpost.payments.R
 import ru.russianpost.payments.base.ui.*
-import ru.russianpost.payments.base.ui.CARD_VALID_THRU_LENGTH
-import ru.russianpost.payments.base.ui.TAX_PERIOD_LENGTH
-import ru.russianpost.payments.base.ui.TAX_PERIOD_PREFIX
-import ru.russianpost.payments.base.ui.TAX_PERIOD_START_YEAR
 import ru.russianpost.payments.tools.toFloatOrDefault
 import ru.russianpost.payments.tools.toIntOrDefault
 import java.util.*
@@ -28,11 +25,26 @@ internal open class BaseInputFieldValidator(
     protected fun needValidate(force: Boolean) = isValidate || force
 }
 
+internal class NumbersValidator(
+    private val numbers: List<Int>
+) : BaseInputFieldValidator() {
+
+    override fun validate(resources: Resources, text: String?, force: Boolean) : String {
+        return when {
+            !needValidate(force) -> ""
+            text.isNullOrEmpty() && !numbers.contains(ZERO_LENGTH) -> resources.getString(R.string.ps_error_field_empty)
+            !numbers.contains(text.orEmpty().length) -> resources.getString(R.string.ps_error_field_lengths)
+            else -> ""
+        }
+    }
+}
+
 internal class EmptyFieldValidator : BaseInputFieldValidator() {
     override fun validate(resources: Resources, text: String?, force: Boolean): String {
         return ""
     }
 }
+
 internal open class NumberOrEmptyFieldValidator(
     override val number: Int
 ) : BaseInputFieldValidator() {
@@ -46,7 +58,6 @@ internal open class NumberOrEmptyFieldValidator(
         }
     }
 }
-
 
 internal open class PrefixValidator(
     private val prefix: String,
@@ -65,8 +76,7 @@ internal open class PrefixValidator(
     }
 }
 
-internal class TaxPeriodFieldValidator(
-) : PrefixValidator(TAX_PERIOD_PREFIX, TAX_PERIOD_LENGTH) {
+internal class TaxPeriodFieldValidator : PrefixValidator(TAX_PERIOD_PREFIX, TAX_PERIOD_LENGTH) {
 
     override fun validate(resources: Resources, text: String?, force: Boolean) : String {
         val error = super.validate(resources, text, force)
@@ -85,8 +95,7 @@ internal class TaxPeriodFieldValidator(
     }
 }
 
-internal class YearFieldValidator(
-) : BaseInputFieldValidator(YEAR_LENGTH) {
+internal class YearFieldValidator : BaseInputFieldValidator(YEAR_LENGTH) {
 
     override fun validate(resources: Resources, text: String?, force: Boolean) : String {
         val error = super.validate(resources, text, force)
@@ -123,8 +132,7 @@ internal class NonZeroNumberValidator(
     }
 }
 
-internal open class EmailValidator(
-) : BaseInputFieldValidator() {
+internal open class EmailValidator : BaseInputFieldValidator() {
 
     override fun validate(resources: Resources, text: String?, force: Boolean) : String {
         val error = super.validate(resources, text, force)
@@ -132,21 +140,22 @@ internal open class EmailValidator(
         return when {
             !needValidate(force) -> ""
             error.isNotEmpty() -> error
-            !text.orEmpty().contains('@') || !text.orEmpty().contains('.') -> resources.getString(R.string.ps_error_invalid_email)
+            !text.orEmpty().contains('@') || !text.orEmpty().contains('.')  ||
+            text.orEmpty().startsWith("@") || text.orEmpty().endsWith(".") -> resources.getString(R.string.ps_error_invalid_email)
             else -> ""
         }
     }
 }
 
-internal class CardValidThruValidator(
-) : BaseInputFieldValidator(CARD_VALID_THRU_LENGTH) {
+@SuppressLint("unused")
+internal class CardValidThruValidator : BaseInputFieldValidator(CARD_VALID_THRU_LENGTH) {
 
     override fun validate(resources: Resources, text: String?, force: Boolean) : String {
         val error = super.validate(resources, text, force)
 
         val date = text.orEmpty().split("/")
         val month = date[0].toIntOrDefault(0)
-        val year = if(date.size > 1) date[1].toIntOrDefault(0) else 0
+        val year = if (date.size > 1) date[1].toIntOrDefault(0) else 0
         val currentYear = Calendar.getInstance().get(Calendar.YEAR) % 100
 
         return when {
@@ -161,8 +170,8 @@ internal class CardValidThruValidator(
 /**
  * Алгоритм Лу́на — алгоритм вычисления контрольной цифры номера пластиковой карты в соответствии со стандартом ISO/IEC 7812
  */
-internal class LuhnCardNumberValidator(
-) : BaseInputFieldValidator(CARD_NUMBER_LENGTH)  {
+@SuppressLint("unused")
+internal class LuhnCardNumberValidator : BaseInputFieldValidator(CARD_NUMBER_LENGTH)  {
 
     override fun validate(resources: Resources, text: String?, force: Boolean) : String {
         val error = super.validate(resources, text, force)

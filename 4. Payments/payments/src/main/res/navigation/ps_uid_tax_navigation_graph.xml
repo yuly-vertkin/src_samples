@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/uid_tax_nav_graph"
+    app:startDestination="@id/uidTaxMenuFragment">
+
+    <fragment
+        android:id="@+id/uidTaxMenuFragment"
+        android:name="ru.russianpost.payments.features.uid_tax.ui.UidTaxMenuFragment"
+        android:label="@string/ps_uid_tax_payments"
+        tools:layout="@layout/ps_fragment_form" >
+        <action
+            android:id="@+id/uidTaxSearchFragmentAction"
+            app:destination="@id/uidTaxSearchFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/uidTaxUinSearchFragmentAction"
+            app:destination="@id/uidTaxUinSearchFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/scanFragmentAction"
+            app:destination="@id/scanFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/uidTaxDetailFragmentAction"
+            app:destination="@id/uidTaxDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/uidTaxSearchFragment"
+        android:name="ru.russianpost.payments.features.uid_tax.ui.UidTaxSearchFragment"
+        android:label="@string/ps_uid_tax_search"
+        tools:layout="@layout/ps_fragment_form" >
+        <action
+            android:id="@+id/uidTaxesFragmentAction"
+            app:destination="@id/uidTaxesFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/uidTaxMenuFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/uidTaxUinSearchFragment"
+        android:name="ru.russianpost.payments.features.uid_tax.ui.UidTaxUinSearchFragment"
+        android:label="@string/ps_uid_tax_search"
+        tools:layout="@layout/ps_fragment_form" >
+        <action
+            android:id="@+id/uidTaxDetailFragmentAction"
+            app:destination="@id/uidTaxDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/scanFragment"
+        android:name="ru.russianpost.payments.features.scan.ui.ScanFragment"
+        tools:layout="@layout/ps_fragment_scan" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/uidTaxesFragment"
+        android:name="ru.russianpost.payments.features.uid_tax.ui.UidTaxesFragment"
+        android:label="@string/ps_uid_taxes"
+        tools:layout="@layout/ps_fragment_form" >
+        <argument android:name="params"
+            app:argType="ru.russianpost.payments.entities.charges.ChargesData"
+            app:nullable="true"
+            android:defaultValue="@null"/>
+        <action
+            android:id="@+id/uidTaxDetailFragmentAction"
+            app:destination="@id/uidTaxDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/uidTaxDocumentsFragmentAction"
+            app:destination="@id/uidTaxDocumentsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/uidTaxAddDocumentFragmentAction"
+            app:destination="@id/uidTaxAddDocumentFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/uidTaxSettingsFragmentAction"
+            app:destination="@id/uidTaxSettingsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/uidTaxSettingsFragment"
+        android:name="ru.russianpost.payments.features.uid_tax.ui.UidTaxSettingsFragment"
+        android:label="@string/ps_fine_settings"
+        tools:layout="@layout/ps_fragment_form" >
+        <action
+            android:id="@+id/uidTaxDocumentsFragmentAction"
+            app:destination="@id/uidTaxDocumentsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/uidTaxDocumentsFragment"
+        android:name="ru.russianpost.payments.features.uid_tax.ui.UidTaxDocumentsFragment"
+        android:label="@string/ps_fine_documents"
+        tools:layout="@layout/ps_fragment_form" >
+        <action
+            android:id="@+id/uidTaxEditDocumentFragmentAction"
+            app:destination="@id/uidTaxEditDocumentFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/uidTaxAddDocumentFragmentAction"
+            app:destination="@id/uidTaxAddDocumentFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/uidTaxAddDocumentFragment"
+        android:name="ru.russianpost.payments.features.uid_tax.ui.UidTaxAddDocumentFragment"
+        tools:layout="@layout/ps_fragment_form" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/uidTaxEditDocumentFragment"
+        android:name="ru.russianpost.payments.features.uid_tax.ui.UidTaxEditDocumentFragment"
+        tools:layout="@layout/ps_fragment_form" >
+        <argument android:name="params"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/uidTaxDetailFragment"
+        android:name="ru.russianpost.payments.features.uid_tax.ui.UidTaxDetailFragment"
+        android:label="@string/ps_uid_tax_details"
+        tools:layout="@layout/ps_fragment_form" >
+        <deepLink
+            app:uri="@string/ps_uid_tax_detail_url" />
+        <argument android:name="params"
+            app:argType="ru.russianpost.payments.entities.charges.Charge"
+            app:nullable="true"
+            android:defaultValue="@null"/>
+        <action
+            android:id="@+id/uidTaxRequisitesFragmentAction"
+            app:destination="@id/uidTaxRequisitesFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/to_auth_dialog_action"
+            app:destination="@id/authDialogFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/selectCardAction"
+            app:destination="@id/selectCardDialogFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/selectCardDialogFragment"
+        android:name="ru.russianpost.payments.features.payment_card.ui.SelectCardDialogFragment"
+        tools:layout="@layout/ps_fragment_form" >
+        <argument android:name="params"
+            app:argType="ru.russianpost.payments.entities.payment_card.CardDetail[]" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/uidTaxRequisitesFragment"
+        android:name="ru.russianpost.payments.features.uid_tax.ui.UidTaxRequisitesFragment"
+        android:label="@string/ps_uid_tax_requisites"
+        tools:layout="@layout/ps_fragment_form" >
+        <argument android:name="params"
+            app:argType="ru.russianpost.payments.entities.charges.Charge" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/authDialogFragment"
+        android:name="ru.russianpost.payments.features.payment_card.ui.AuthDialogFragment"
+        android:label=""
+        tools:layout="@layout/ps_fragment_auth_dialog" >
+        <action
+            android:id="@+id/to_confirmation_action"
+            app:destination="@id/uidTaxConfirmationFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/uidTaxDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/uidTaxConfirmationFragment"
+        android:name="ru.russianpost.payments.features.uid_tax.ui.UidTaxConfirmationFragment"
+        tools:layout="@layout/ps_fragment_form" >
+        <action
+            android:id="@+id/addressDialogFragmentAction"
+            app:destination="@id/addressDialogFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/to_payment_card_action"
+            app:destination="@id/paymentCardFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/uidTaxDetailFragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/addressDialogFragment"
+        android:name="ru.russianpost.payments.features.payment_card.ui.AddressDialogFragment"
+        tools:layout="@layout/ps_fragment_form" >
+    </dialog>
+
+    <fragment
+        android:id="@+id/paymentCardFragment"
+        android:name="ru.russianpost.payments.features.payment_card.ui.PaymentCardFragment"
+        android:label="@string/ps_payment_card_title"
+        tools:layout="@layout/ps_fragment_form" >
+        <action
+            android:id="@+id/to_payment_done_action"
+            app:destination="@id/uidTaxPaymentDoneFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/uid_tax_nav_graph"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/uidTaxPaymentDoneFragment"
+        android:name="ru.russianpost.payments.features.uid_tax.ui.UidTaxPaymentDoneFragment"
+        android:label="@string/ps_uid_tax_done"
+        tools:layout="@layout/ps_fragment_form" >
+        <deepLink
+            app:uri="@string/ps_uid_tax_payment_done_url" />
+        <argument android:name="params"
+            app:argType="ru.russianpost.payments.entities.payment_card.PaymentDoneParams"
+            android:defaultValue="NONE" />
+        <action
+            android:id="@+id/viewCheckAction"
+            app:destination="@id/viewCheckFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/viewCheckFragment"
+        android:name="ru.russianpost.payments.features.payment_card.ui.ViewCheckFragment"
+        android:label="@string/ps_view_check"
+        tools:layout="@layout/ps_fragment_view_check" >
+        <argument android:name="params"
+            app:argType="string"
+            android:defaultValue="" />
+        <action
+            android:id="@+id/to_payment_done_dialog_action"
+            app:destination="@id/paymentDoneDialogFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/paymentDoneDialogFragment"
+        android:name="ru.russianpost.payments.features.payment_card.ui.PaymentDoneDialogFragment"
+        android:label="@string/ps_view_check"
+        tools:layout="@layout/ps_fragment_form" >
+        <action
+            android:id="@+id/to_payment_done_action"
+            app:destination="@id/uidTaxPaymentDoneFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/uid_tax_nav_graph"
+            app:popUpToInclusive="true"/>
+    </dialog>
+
+    <dialog
+        android:id="@+id/adviceFragment"
+        android:name="ru.russianpost.payments.features.advices.ui.AdviceFragment"
+        android:label=""
+        tools:layout="@layout/ps_fragment_form" >
+        <argument android:name="params"
+            app:argType="string"
+            android:defaultValue="" />
+        <action
+            android:id="@+id/webViewFragmentAction"
+            app:destination="@id/webViewFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="ru.russianpost.payments.base.ui.SimpleWebViewFragment"
+        android:label=""
+        tools:layout="@layout/ps_fragment_web_view" >
+        <argument android:name="params"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+    <!--  Global actions  -->
+
+    <action
+        android:id="@+id/to_advice_action"
+        app:destination="@id/adviceFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+</navigation>

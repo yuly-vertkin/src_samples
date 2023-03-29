@@ -8,5 +8,4 @@ import ru.russianpost.payments.entities.PaymentStartParams
 internal interface PaymentStartParamsRepository {
     fun getData() : PaymentStartParams
     fun saveData(data: PaymentStartParams?)
-    fun clearData()
 }

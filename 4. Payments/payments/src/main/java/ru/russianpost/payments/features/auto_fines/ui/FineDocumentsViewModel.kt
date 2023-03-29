@@ -1,6 +1,5 @@
 package ru.russianpost.payments.features.auto_fines.ui
 
-import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.russianpost.payments.R
 import ru.russianpost.payments.base.ui.BaseViewModel
 import ru.russianpost.payments.base.ui.CellFieldValue
@@ -8,29 +7,30 @@ import ru.russianpost.payments.base.ui.DividerFieldValue
 import ru.russianpost.payments.entities.AppContextProvider
 import ru.russianpost.payments.entities.auto_fines.AutoFineEditDocumentParam
 import ru.russianpost.payments.entities.auto_fines.AutoFineType
-import ru.russianpost.payments.features.auto_fines.domain.AutoFinesRepository
+import ru.russianpost.payments.features.charges.domain.ChargesRepository
 import javax.inject.Inject
 
 /**
  * ViewModel документов для поиска штрафов
  */
-@HiltViewModel
 internal class FineDocumentsViewModel @Inject constructor(
-    private val repository: AutoFinesRepository,
+    private val repository: ChargesRepository,
     appContextProvider: AppContextProvider,
 ) : BaseViewModel(appContextProvider) {
 
     override fun onCreateView() {
         super.onCreateView()
+        clearAllFields()
 
-        val autoFineData = repository.getData()
+        val chargesData = repository.getData()
 
         with(context.resources) {
-            autoFineData.vehicleRegistrationCertificates?.map {
+            chargesData.vehicleRegistrationCertificates?.map {
                 addFields(listOf(
                     CellFieldValue(
                         title = getString(R.string.ps_vrc, it),
                         endDrawableRes = R.drawable.ic24_navigation_chevron_right,
+                        endDrawableColorRes = R.color.grayscale_stone,
                         data = AutoFineEditDocumentParam(AutoFineType.VRC, it),
                         action = ::onEditDocument,
                     ),
@@ -39,11 +39,12 @@ internal class FineDocumentsViewModel @Inject constructor(
                     ),
                 ))
             }
-            autoFineData.driverLicenses?.map {
+            chargesData.driverLicenses?.map {
                 addFields(listOf(
                     CellFieldValue(
                         title = getString(R.string.ps_dl, it),
                         endDrawableRes = R.drawable.ic24_navigation_chevron_right,
+                        endDrawableColorRes = R.color.grayscale_stone,
                         data = AutoFineEditDocumentParam(AutoFineType.DL, it),
                         action = ::onEditDocument,
                     ),
@@ -55,11 +56,12 @@ internal class FineDocumentsViewModel @Inject constructor(
             addField(
                 CellFieldValue(
                     title = getString(R.string.ps_add_documents),
+                    titleColorRes = R.color.common_xenon,
                     startDrawableRes = R.drawable.ic24_action_add,
+                    startDrawableColorRes = R.color.common_xenon,
                     action = ::onAddDocument,
                 ),
             )
-            isBtnVisible.value = false
         }
     }
 

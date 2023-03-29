@@ -4,4 +4,5 @@ package ru.russianpost.payments.entities.history
 internal data class HistoryData (
     val taxFilter: Boolean = false,
     val fineFilter: Boolean = false,
+    val period: String? = null,
 )

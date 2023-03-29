@@ -20,6 +20,16 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- For emulating push -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/ps_uri_scheme"
+                    android:host="@string/ps_uri_host" />
+            </intent-filter>
         </activity>
+
+        <activity android:name=".ExtAuthActivity" android:exported="false" />
     </application>
 </manifest>

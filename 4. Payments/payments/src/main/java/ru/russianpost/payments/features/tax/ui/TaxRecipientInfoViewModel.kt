@@ -1,19 +1,13 @@
 package ru.russianpost.payments.features.tax.ui
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import ru.russianpost.mobileapp.widget.Snackbar
 import ru.russianpost.payments.R
 import ru.russianpost.payments.base.domain.BaseInputFieldFormatter
 import ru.russianpost.payments.base.domain.BaseInputFieldValidator
-import ru.russianpost.payments.base.domain.PaymentStartParamsRepository
 import ru.russianpost.payments.base.domain.PrefixValidator
 import ru.russianpost.payments.base.ui.*
 import ru.russianpost.payments.entities.AppContextProvider
-import ru.russianpost.payments.entities.Response
-import ru.russianpost.payments.entities.tax.TreasuryData
 import ru.russianpost.payments.features.tax.domain.TaxDetailsRepository
 import ru.russianpost.payments.tools.SnackbarParams
 import javax.inject.Inject
@@ -21,15 +15,13 @@ import javax.inject.Inject
 /**
  * ViewModel ввода информации о получателе
  */
-@HiltViewModel
 internal class TaxRecipientInfoViewModel @Inject constructor(
     private val repository: TaxDetailsRepository,
-    private val paramsRepository: PaymentStartParamsRepository,
     appContextProvider: AppContextProvider,
 ) : BaseViewModel(appContextProvider) {
 
-    override fun onCreateView() {
-        super.onCreateView()
+    override fun onCreate() {
+        super.onCreate()
 
         val taxDetails = repository.getData()
 
@@ -105,15 +97,16 @@ internal class TaxRecipientInfoViewModel @Inject constructor(
                     enabled = false,
                 ),
             ))
+
+            addField(
+                ButtonFieldValue(
+                    text = MutableLiveData(getString(R.string.ps_proceed)),
+                    horizontalMarginRes = R.dimen.ps_horizontal_margin,
+                    action = ::onButtonClick,
+                ),
+                isMainFields = false
+            )
         }
-    }
-
-    override fun onViewCreated() {
-        super.onViewCreated()
-
-        val params = paramsRepository.getData()
-        if(params.id.isNotEmpty())
-            action.value = TaxRecipientInfoFragmentDirections.toPaymentDoneAction()
     }
 
     private fun handleBicVisibilty(data: Any?) {
@@ -126,18 +119,15 @@ internal class TaxRecipientInfoViewModel @Inject constructor(
     private fun getTreasuryData(data: Any?) {
         val bic = getFieldText(R.id.ps_bank_id_code)
         if (bic.length == BANK_ID_CODE_LENGTH) {
-            viewModelScope.launch {
-                repository.getTreasuryData(bic).collect {
-                    if (it is Response.Success) {
-                        val result: TreasuryData = it.data
-                        setFieldText(R.id.ps_bank_name, result.bankName)
-                        setFieldText(R.id.ps_correspondent_account, result.correspondentAccount)
-                        setFieldText(R.id.ps_recipient_name, result.recipientName)
-                    } else if (it is Response.Error) {
-                        setFieldError(R.id.ps_bank_id_code, context.resources.getString(R.string.ps_error_value))
-                    }
-                }
-            }
+            processNetworkCall(
+                action = { repository.getTreasuryData(bic) },
+                onSuccess = {
+                    setFieldText(R.id.ps_bank_name, it.bankName)
+                    setFieldText(R.id.ps_correspondent_account, it.correspondentAccount)
+                    setFieldText(R.id.ps_recipient_name, it.recipientName)
+                },
+                onError = { setFieldError(R.id.ps_bank_id_code, context.resources.getString(R.string.ps_error_value)) },
+            )
         } else {
             setFieldText(R.id.ps_bank_name, "")
             setFieldText(R.id.ps_correspondent_account, "")
@@ -145,9 +135,9 @@ internal class TaxRecipientInfoViewModel @Inject constructor(
         }
     }
 
-    override fun onButtonClick() {
+    private fun onButtonClick(data: Any?) {
         if (!validateAll(context.resources)) {
-            showSnackbar.value = SnackbarParams(R.string.ps_error_in_form, Snackbar.Style.ERROR)
+            showSnackbar.value = SnackbarParams(R.string.ps_error_in_form, style = Snackbar.Style.ERROR)
             return
         }
 

@@ -1,52 +1,50 @@
 package ru.russianpost.payments.features.history.ui
 
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import ru.russianpost.payments.MainNavGraphDirections
+import androidx.core.net.toUri
+import androidx.navigation.NavDeepLinkRequest
 import ru.russianpost.payments.R
 import ru.russianpost.payments.base.domain.PaymentStartParamsRepository
 import ru.russianpost.payments.base.ui.*
 import ru.russianpost.payments.entities.AppContextProvider
 import ru.russianpost.payments.entities.PaymentStartParams
-import ru.russianpost.payments.entities.Response
 import ru.russianpost.payments.entities.history.History
 import ru.russianpost.payments.entities.history.PaymentType
 import ru.russianpost.payments.features.history.domain.HistoryRepository
 import ru.russianpost.payments.tools.formatReverseDate
+import ru.russianpost.payments.tools.getDateFromStr
 import ru.russianpost.payments.tools.getMonthFromDate
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 /**
  * ViewModel истории платежей
  */
-@HiltViewModel
 internal class HistoryViewModel @Inject constructor(
     private val repository: HistoryRepository,
     private val paramsRepository: PaymentStartParamsRepository,
     appContextProvider: AppContextProvider,
-) : BaseViewModel(appContextProvider) {
+) : BaseMenuViewModel(appContextProvider) {
 
+    // we need reload history after changing history filter
+    // so make network call in onCreateView()
     override fun onCreateView() {
         super.onCreateView()
 
-        isBtnVisible.value = false
-
-        viewModelScope.launch {
-            repository.getHistory().collect {
-                isLoading.value = it is Response.Loading
-                when(it) {
-                    is Response.Success -> addHistory(it.data)
-                    is Response.Error -> showDialog.value = DialogTypes.SERVICE_UNAVAILABLE
-                    else -> {}
-                }
-            }
-        }
+// back microservice is not available yet
+/*
+        processNetworkCall(
+            action = { repository.getHistory() },
+            onSuccess = ::addHistory,
+            onError = { showServiceUnavailableDialog() },
+        )
+*/
+        addHistory(listOf(History("123", PaymentType.PAYMENT.name, "purpose", 1.0f, "2022-12-12")))
     }
 
     private fun addHistory(history: List<History>) {
-        if(history.isEmpty()) {
+        if (history.isEmpty()) {
             with(context.resources) {
                 addField(
                     TextFieldValue(
@@ -62,12 +60,15 @@ internal class HistoryViewModel @Inject constructor(
         }
 
         var lastDate = ""
-        history.map {
-            val currentDay = getMonthFromDate(it.date)
-            if(currentDay != lastDate) {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        history.sortedByDescending {
+            getDateFromStr(it.createdAt, inputFormat)?.time ?: 0
+        }.map {
+            val currentDay = getMonthFromDate(it.createdAt)
+            if (currentDay != lastDate) {
                 addFields(listOf(
                     DividerFieldValue(
-                        heightRes = if(lastDate != "") R.dimen.ps_big_divider_height else R.dimen.ps_zero_height,
+                        heightRes = if (lastDate != "") R.dimen.ps_big_divider_height else R.dimen.ps_zero_height,
                     ),
                     TextFieldValue(
                         text = currentDay,
@@ -84,10 +85,10 @@ internal class HistoryViewModel @Inject constructor(
             }
             addFields(listOf(
                 HistoryFieldValue(
-                    title = it.title,
-                    date = formatReverseDate(it.date),
-                    sum = makeSum(it.sum),
-                    details = it.desc,
+                    title = getTitle(it.type),
+                    date = formatReverseDate(it.createdAt),
+                    sum = makeSum(it.totalAmount),
+                    details = it.purpose,
                     data = it,
                     action = ::onHistoryClick,
                 ),
@@ -98,7 +99,15 @@ internal class HistoryViewModel @Inject constructor(
         }
     }
 
-    fun onActionFilter() {
+    private fun getTitle(type: String?) =
+        when(type) {
+            PaymentType.PAYMENT.name, PaymentType.TAX_PAYMENT.name -> context.resources.getString(R.string.ps_history_tax_title)
+            PaymentType.FINE_PAYMENT.name -> context.resources.getString(R.string.ps_history_fine_title)
+            else -> ""
+        }
+
+    /** menu filter */
+    override fun onMenuItem1() {
         action.value = HistoryFragmentDirections.historyFilterFragmentAction()
     }
 
@@ -106,10 +115,17 @@ internal class HistoryViewModel @Inject constructor(
         data?.let {
             val history = it as History
             paramsRepository.saveData(PaymentStartParams(id = history.id))
-            when(history.type) {
-                PaymentType.Tax.name -> action.value = MainNavGraphDirections.taxFragmentAction()
-                PaymentType.AutoFine.name -> action.value = MainNavGraphDirections.autoFinesFragmentAction()
+
+            val url =  when(history.type) {
+                PaymentType.PAYMENT.name -> context.resources.getString(R.string.ps_tax_payment_done_url)
+                PaymentType.TAX_PAYMENT.name -> context.resources.getString(R.string.ps_uid_tax_payment_done_url)
+                PaymentType.FINE_PAYMENT.name -> context.resources.getString(R.string.ps_fine_payment_done_url)
+                else -> ""
             }
+
+            actionDeepLink.value = NavDeepLinkRequest.Builder
+                .fromUri(url.toUri())
+                .build()
         }
     }
 }

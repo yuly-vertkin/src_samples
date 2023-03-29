@@ -12,9 +12,13 @@ internal fun String.toFloatOrDefault(default: Float): Float =
     this.toFloatOrNull() ?: default
 
 internal data class SnackbarParams(
-    @StringRes val resId: Int,
+    @StringRes val resId: Int = 0,
+    val text: String = "",
     val style: Style = Style.DEFAULT
 )
 
 internal fun View.showSnackbar(params: SnackbarParams) =
-    Snackbar.make(this, params.resId, params.style).show()
+    if (params.resId != 0)
+        Snackbar.make(this, params.resId, params.style).show()
+    else
+        Snackbar.make(this, params.text, params.style).show()
